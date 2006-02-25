@@ -1,10 +1,14 @@
 # snag Makefile
 
+package = snag
+version = 0.2
+
 TARGETS = snag smaster
-
+INTERMEDIATE = lex.yy.c snag.tab.c snag.tab.h
 SNAGOBJS = snag.o snagdf.o snaginfo.o thresh.o snag.tab.o lex.yy.o snagcmd.o
-
 SMASOBJS = smaster.o
+
+pv = $(package)-$(version)
 
 all: $(TARGETS)
 
@@ -23,7 +27,7 @@ clean :
 	rm -f *.o core
 
 clobber : clean
-	rm -f $(TARGETS)
+	rm -f $(TARGETS) $(INTERMEDIATE)
 
 install: all
 	install snag /usr/local/bin/snag
@@ -34,6 +38,11 @@ snag.tab.c snag.tab.h: snag.yacc
 
 lex.yy.c: snag.lex
 	flex -s snag.lex
+
+dist:   
+	ln -sf . $(pv)
+	sed 's/^/$(pv)\//' MANIFEST | tar cvzf $(pv).tar.gz -T -
+	rm $(pv)
 
 # DEPENDENCIES
 lex.yy.o: lex.yy.c snag.tab.h snag.h
