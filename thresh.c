@@ -54,7 +54,7 @@ void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit) {
 	hent->hwarn = hwarn;
 	hent->hcrit = hcrit;
 	if (showitems) {
-		printf("%s %ld %ld %ld %ld\n", s, lcrit, lwarn, hwarn, hcrit);
+		printf("limit %s %ld %ld %ld %ld\n", s, lcrit, lwarn, hwarn, hcrit);
 		}
 	}
 
