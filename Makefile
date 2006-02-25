@@ -3,10 +3,10 @@
 package = snag
 version = 0.2
 
-TARGETS = snag smaster
+TARGETS = snag check_snag
 INTERMEDIATE = lex.yy.c snag.tab.c snag.tab.h
 SNAGOBJS = snag.o snagdf.o snaginfo.o thresh.o snag.tab.o lex.yy.o snagcmd.o
-SMASOBJS = smaster.o
+SMASOBJS = check_snag.o
 
 pv = $(package)-$(version)
 
@@ -15,7 +15,7 @@ all: $(TARGETS)
 snag : $(SNAGOBJS)
 	cc $(SNAGOBJS) -o $@ -lfl
 
-smaster: $(SMASOBJS)
+check_snag: $(SMASOBJS)
 	cc $(SMASOBJS) -o $@
 
 depend : snag.tab.c lex.yy.c
@@ -31,7 +31,7 @@ clobber : clean
 
 install: all
 	install snag /usr/local/bin/snag
-	install smaster /usr/local/bin/smaster
+	install check_snag /usr/local/bin/check_snag
 
 snag.tab.c snag.tab.h: snag.yacc
 	yacc -d -b snag snag.yacc
@@ -46,7 +46,7 @@ dist:
 
 # DEPENDENCIES
 lex.yy.o: lex.yy.c snag.tab.h snag.h
-smaster.o: smaster.c
+check_snag.o: check_snag.c
 snag.o: snag.c snag.h
 snag.tab.o: snag.tab.c snag.h
 snagcmd.o: snagcmd.c snag.h
