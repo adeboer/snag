@@ -23,6 +23,8 @@ struct hnode {
 
 struct hnode *htab[HASHSIZE];
 
+int showitems = 0;
+
 struct hnode *hasher(char *s, int make) {
 	int h = hash(s);
 	struct hnode *p = htab[h];
@@ -51,9 +53,13 @@ void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit) {
 	hent->lwarn = lwarn;
 	hent->hwarn = hwarn;
 	hent->hcrit = hcrit;
+	if (showitems) {
+		printf("%s %ld %ld %ld %ld\n", s, lcrit, lwarn, hwarn, hcrit);
+		}
 	}
 
-void hinit() {
+void hinit(int showdefaults) {
+	showitems = showdefaults;
 	hashadd("Disk_space", 3, 20, 110, 120);
 	hashadd("Disk_inodes", 3, 20, 110, 120);
 	hashadd("load1", -1, -1, 15, 30);
@@ -62,6 +68,7 @@ void hinit() {
 	hashadd("Uptime", -1, 3600, 42768000, 42949672);
 	hashadd("Swap_free", 10, 50, 110, 120);
 	hashadd("Processes", -1, -1, 150, 200);
+	if (showdefaults) exit(0);
 	}
 	
 int thresher(char *name, long val) {
