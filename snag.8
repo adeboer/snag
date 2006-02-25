@@ -1,0 +1,82 @@
+.TH snag 8 "Monitoring"
+.UC 4
+
+.SH NAME
+snag - remote host monitoring utility
+
+.SH DESCRIPTION
+Outputs a series of lines with health information for the local host.
+Each line has three semicolon-delimited fields, for description of the
+line item, a numeric status, and further check output.
+
+This data is designed to be compatible with
+.I Nagios
+with the output data being fed to it through the
+.IR check_snag (8)
+program on the central monitoring host.  Each remote host would permit
+the monitoring host to SSH to an account on it whose shell is the
+.I snag
+program.
+
+.SH OPTIONS
+.TP
+.B -b
+Causes
+.I snag
+to output its internal configuration defaults in the same
+format as the configuration file.  Note that any existing configuration
+file is not read, and normal processing does not occur.
+
+.SH CONFIGURATION
+
+Directives in
+.I /etc/snag.conf
+(if present) will be used to modify the operation of this program.
+
+A "limit" directive can set alerting thresholds for detected numeric
+values.  See the -b output for identifiers and default values.  A line
+from it can be copied into the configuration file and modified.  The
+four numeric values are LOW_CRITICAL, LOW_WARNING, HIGH_WARNING, and
+HIGH_CRITICAL.  A value between the middle pair is considered OK, while
+a value between the outer pair merits a WARNING, and a value that meets
+either critical bound generates a CRITICAL alert.
+
+Whitespace, emty lines, and comments are allowed.
+
+.SH SECURITY
+
+This program does not permit any "interesting" options such as opening
+an arbitrarily-specified file as a configuration.  The -b option is
+harmless.
+
+Protecting the account used would require attention to SSH configuration.
+
+.SH FILES
+
+.I /etc/snag.conf
+
+.SH SEE ALSO
+
+.IR check_snag (8)
+
+.SH AUTHOR
+Anthony de Boer <adb@leftmind.net>
+
+.SH LICENSE
+
+Copyright (C) 2006 Anthony de Boer
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of version 2 of the GNU General Public License as
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+

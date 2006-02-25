@@ -1,0 +1,85 @@
+.TH check_snag 8 "Monitoring"
+.UC 4
+
+.SH NAME
+
+check_snag
+
+.SH DESCRIPTION
+Contact a host for
+.IR snag (8)
+data, inject any data so obtained into
+.I Nagios
+via its external command pipe, and exit with appropriate output and
+status to act as a Nagios check.
+
+Note that this single check tells Nagios whether the remote host is
+reachable, up, and able to run
+.IR snag (8).
+The various checked items are passively injected, so
+they will retain their last known status during downtime or periods
+of unreachability.
+
+.SH SYNOPSIS
+
+check_snag
+.I hostname command
+
+It will run the command to execute
+.IR snag (8)
+on the desired host.  Each line of data received will become a
+PROCESS_SERVICE_CHECK_RESULT directive, with the specified hostname
+added, and given to the external command pipe.
+
+Suggested usage is as follows:
+
+.nf
+define command{
+  command_name check_self
+  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
+  	/usr/local/bin/snag
+  }
+
+define command{
+  command_name check_snag
+  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
+  	/usr/bin/ssh snag@$HOSTADDRESS$
+  }
+.fi
+
+.SH SECURITY
+
+The user running this command must have permission to write to the
+Nagios external command pipe.  Typically this requires membership
+in the nagios group.
+
+Nagios requires that all items monitored be preconfigured; examine the
+Nagios log file to find any items being rejected, for which a configuration
+file entry allowing a passive check should be created.
+
+.SH SEE ALSO
+
+.IR snag (8)
+
+.SH AUTHOR
+Anthony de Boer <adb@leftmind.net>
+
+.SH LICENSE
+
+Copyright (C) 2006 Anthony de Boer
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of version 2 of the GNU General Public License as
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+
