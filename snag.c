@@ -9,6 +9,8 @@ char *sword[] = { "OK", "WARNING", "CRITICAL", "UNDEF",
 main() {
 	int rc = 0;
 	hinit();
+	openconfig();
+	yyparse();
 	rc |= snagdf();
 	rc |= snaginfo();
 	exit(rc);
