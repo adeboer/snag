@@ -23,3 +23,13 @@ command { return COMMAND; }
 \n	{ lineno++; return NL; }
 .	{ return yytext[0]; }
 
+%%
+
+void openconfig() {
+	yyin = fopen(cfile, "r");
+	if (!yyin) {
+		perror("snag: cannot open " cfile);
+		exit(1);
+		}
+	}
+
