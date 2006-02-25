@@ -1,6 +1,6 @@
 /* snag.h */
 
-#define cfile "snag.conf"
+#define cfile "/etc/snag.conf"
 
 extern char *sword[];
 extern int lineno;
@@ -27,11 +27,19 @@ int gthresher(char *s, long val);
 int gnormalize(int c);
 
 /* initialize an internal hash table */
-void hinit();
+void hinit(int showdefaults);
 
 /* add a rule to the internal hash table */
 void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit);
 
-/* open the config file */
-void openconfig();
+/* open the config file, return 1 if ok, 0 if no config file */
+int openconfig();
 
+/* set up for external commands */
+void setupcmd();
+
+/* set up an external command */
+void startcmd(char *name, char *cmdline);
+
+/* clean up external commands */
+void cleancmd();
