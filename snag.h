@@ -35,6 +35,9 @@ void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit);
 /* open the config file, return 1 if ok, 0 if no config file */
 int openconfig();
 
+/* close the config file, especially pre-exec */
+void closeconfig();
+
 /* set up for external commands */
 void setupcmd();
 

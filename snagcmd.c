@@ -53,6 +53,7 @@ void startcmd(char *name, char *cmdline) {
 			if (dup2(fildes[1], 1) == -1) sysdie("dup2 stdout");
 			close(fildes[0]);
 			close(fildes[1]);
+			closeconfig();
 			execl(THESHELL, THESHELL, "-c", cmdline, NULL);
 			sysdie(THESHELL);
 			;;

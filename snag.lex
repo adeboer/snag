@@ -65,3 +65,6 @@ int openconfig() {
 		}
 	}
 
+void closeconfig() {
+	fclose(yyin);
+	}
