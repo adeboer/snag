@@ -32,7 +32,7 @@ limitcmd: LIMIT IDENTIFIER NUMBER NUMBER NUMBER NUMBER
 
 commandcmd: COMMAND QSTRING QSTRING
 	{
-	fprintf(stderr, "Command %s : %s\n", $2, $3);
+	startcmd($2, $3);
 	};
 
 %%

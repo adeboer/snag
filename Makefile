@@ -2,7 +2,7 @@
 
 TARGETS = snag smaster
 
-SNAGOBJS = snag.o snagdf.o snaginfo.o thresh.o snag.tab.o lex.yy.o
+SNAGOBJS = snag.o snagdf.o snaginfo.o thresh.o snag.tab.o lex.yy.o snagcmd.o
 
 SMASOBJS = smaster.o
 
@@ -40,6 +40,7 @@ lex.yy.o: lex.yy.c snag.tab.h snag.h
 smaster.o: smaster.c
 snag.o: snag.c snag.h
 snag.tab.o: snag.tab.c snag.h
+snagcmd.o: snagcmd.c snag.h
 snagdf.o: snagdf.c snag.h
 snaginfo.o: snaginfo.c snag.h
 thresh.o: thresh.c snag.h
