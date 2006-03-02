@@ -33,6 +33,11 @@ Directives in
 .I /etc/snag.conf
 (if present) will be used to modify the operation of this program.
 
+Whitespace, emty lines, and comments are allowed.
+
+.TP
+.B limit item_ID LOW_CRITICAL LOW_WARNING HIGH_WARNING HIGH_CRITICAL
+
 A "limit" directive can set alerting thresholds for detected numeric
 values.  See the -b output for identifiers and default values.  A line
 from it can be copied into the configuration file and modified.  The
@@ -41,7 +46,20 @@ HIGH_CRITICAL.  A value between the middle pair is considered OK, while
 a value between the outer pair merits a WARNING, and a value that meets
 either critical bound generates a CRITICAL alert.
 
-Whitespace, emty lines, and comments are allowed.
+Example:
+
+limit Disk_space 3 10 110 120
+
+.TP
+.B command "description" "commandline"
+
+This causes an external command (a Nagios check) to be run by snag and
+its output to be included with snag's output.  The description and
+commandline must both be given as quoted strings.
+
+Example:
+
+command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
 
 .SH SECURITY
 

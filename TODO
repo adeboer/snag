@@ -6,3 +6,5 @@ Portability (find out how other Unicies do things)
 
 Include syntax, use yywrap() chaining with a queue or stack of files
 
+Guide to setting up ssh, nagios, etc.
+
