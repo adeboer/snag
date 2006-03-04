@@ -55,16 +55,7 @@ are fed to the Nagios external command pipe as passive check results.
 Installation
 ------------
 
-No ./configure yet.
-
-Things that may need tweaking:
-
-Makefile: PREFIX is where to install the pieces.
-check_snag.c: NAGIOSRW is the Nagios external command pipe.
-snagmsgs: CONF is the configuration file containing your passive checks,
- and LOG is the Nagios logfile.
-
-After that, make && make install.
+See the file INSTALL in the distribution.
 
 Author/Copyright
 ----------------
