@@ -19,7 +19,7 @@
 PREFIX = /usr/local
 
 package = snag
-version = 0.3
+version = 0.4
 
 TARGETS = snag check_snag
 INTERMEDIATE = lex.yy.c snag.tab.c snag.tab.h
