@@ -23,10 +23,15 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <string.h>
 
 #include "snag.h"
 
 #define THESHELL "/bin/sh"
+
+static void alcatch(int signo) {
+	exit(1);
+	}
 
 struct cnode {
 	char *name;
@@ -51,6 +56,8 @@ void die(char *s) {
 
 void setupcmd() {
 	if (signal(SIGCHLD, SIG_DFL) == SIG_ERR) die("signal() failure\n");
+	if (signal(SIGALRM, alcatch) == SIG_ERR) die("signal() failure\n");
+	alarm(8);
 	}
 
 void startcmd(char *name, char *cmdline) {
