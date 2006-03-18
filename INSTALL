@@ -19,6 +19,11 @@ Configuration
 These tweaks are to Nagios config files, possibly found in /etc/nagios
 or /usr/local/etc/nagios or such.
 
+in nagios.cfg
++++++++++++++
+
+check_external_commands=1
+
 
 in checkcomands.cfg
 +++++++++++++++++++

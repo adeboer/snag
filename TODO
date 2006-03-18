@@ -1,10 +1,13 @@
-Config file to adjust thresholds
-
-Run external commands
 
 Portability (find out how other Unicies do things)
 
 Include syntax, use yywrap() chaining with a queue or stack of files
 
-Guide to setting up ssh, nagios, etc.
+Guide to setting up ssh (security check), nagios, etc.
+
+Timeout on external commands
+
+Overrides to ignore filesystems or set unique thresholds
+
+Debug situation Linda found (LVM?  Nondefault return values?)
 
