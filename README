@@ -11,7 +11,9 @@ monitoring.
 * (It can use other transports; ultimately check_snag just has to be able
 to run something that causes snag to be run on the appropriate host with
 standard output coming back.  Netcat, xinetd, or the like could be pressed
-into service.)
+into service.  However, SSH is what was intended.)
+
+* You get a free SSH service check out of this.
 
 * It runs several checks at once, rather than requiring multiple sessions
 to be opened per monitoring cycle.  Most of the standard checks require a

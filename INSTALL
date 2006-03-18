@@ -84,8 +84,4 @@ will parse those errors and your existing services.cfg and generate lines
 that should be added to services.cfg.  Do so, SIGHUP Nagios, and you should
 see all of the individual check items.
 
-Author/Copyright
-----------------
-
-Copyright (C) 2006 Anthony de Boer, released under GPL v2.
-
+adb
