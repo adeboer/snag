@@ -1,0 +1,13 @@
+#!/usr/bin/perl -w
+use strict;
+
+my %t;
+
+while(<>) {
+	$t{"$1\t$2"} = 1 if /Warning\:  Message queue contained results for service \'(.*)\' on host \'(.*)\'\.  The service could not be found\!/;
+	}
+
+for my $k (sort (keys %t)) {
+	my ($svc, $host) = split(/\t/, $k);
+	print "define service{\n\tuse\t\t\tgeneric-passive\n\thost_name\t\t$host\n\tservice_description\t$svc\n}\n\n";
+	}
