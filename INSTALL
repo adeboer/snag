@@ -1,0 +1,87 @@
+Snag Installation
+-----------------
+
+No ./configure yet.
+
+Things that may need tweaking:
+
+Makefile: PREFIX is where to install the pieces.
+check_snag.c: NAGIOSRW is the Nagios external command pipe.
+snagmsgs: CONF is the configuration file containing your passive checks,
+ and LOG is the Nagios logfile.
+
+After that, make && make install.
+
+
+Configuration
+-------------
+
+These tweaks are to Nagios config files, possibly found in /etc/nagios
+or /usr/local/etc/nagios or such.
+
+in nagios.cfg
++++++++++++++
+
+check_external_commands=1
+
+
+in checkcomands.cfg
++++++++++++++++++++
+
+define command{
+  command_name  check_dummy
+  command_line  /bin/true
+  }
+
+define command{
+  command_name  check_self
+  command_line  /usr/local/bin/check_snag $HOSTNAME$ /usr/local/bin/snag
+  }
+
+define command{
+  command_name  check_snag
+  command_line  /usr/local/bin/check_snag $HOSTNAME$ /usr/bin/ssh snag@$HOSTADDRESS$
+  }
+
+in services.cfg
++++++++++++++++
+
+define service{
+        use                     generic-service
+        name                    generic-passive
+        active_checks_enabled   0
+        passive_checks_enabled  1
+        check_command           check_dummy
+        register                0
+        }
+
+Then to start things off for each remote host we run check_snag itself
+as an active check something like so:
+
+define service{
+        use                     generic-service
+        host_name               thatone
+        check_command           check_snag
+        service_description     Snag Remote Check
+        }
+
+and for localhost:
+
+define service{
+        use                     generic-service
+        host_name               thisone
+        check_command           check_self
+        service_description     Snag Self Check
+        }
+
+Letting Nagios run with that should cause these checks to work, so that's
+phase one done.  To get the actual check data from each line item, there
+are a bunch of little items to configure, but that's what we have snagmsgs
+for.  After these checks have run, your Nagios logfile should contain
+error messages of the form "Message queue contained results for service
+'whatever' on host 'thatone'.  The service could not be found!".  Snagmsgs
+will parse those errors and your existing services.cfg and generate lines
+that should be added to services.cfg.  Do so, SIGHUP Nagios, and you should
+see all of the individual check items.
+
+adb

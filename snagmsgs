@@ -12,6 +12,7 @@ my %t;
 
 while(<L>) {
 	$t{"$1\t$2"} = 1 if /Warning\:  Message queue contained results for service \'(.*)\' on host \'(.*)\'\.  The service could not be found\!/;
+	$t{"$2\t$1"} = 1 if /PROCESS_SERVICE_CHECK_RESULT\;([^\;]+)\;([^\;]+)\;/;
 	}
 
 my $svc = '?';
