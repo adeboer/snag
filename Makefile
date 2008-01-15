@@ -16,8 +16,10 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 #	USA
 
+PREFIX = /usr/local
+
 package = snag
-version = 0.2
+version = 0.3
 
 TARGETS = snag check_snag
 INTERMEDIATE = lex.yy.c snag.tab.c snag.tab.h
@@ -46,8 +48,9 @@ clobber : clean
 	rm -f $(TARGETS) $(INTERMEDIATE)
 
 install: all
-	install snag /usr/local/bin/snag
-	install check_snag /usr/local/bin/check_snag
+	install snag $(PREFIX)/bin/snag
+	install check_snag $(PREFIX)/bin/check_snag
+	install snagmsgs $(PREFIX)/bin/snagmsgs
 
 snag.tab.c snag.tab.h: snag.yacc
 	yacc -d -b snag snag.yacc
