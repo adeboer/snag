@@ -25,6 +25,14 @@
 
 #define debug 0
 
+int hundiv (unsigned long numer, unsigned long denom) {
+	if (denom > 1000000) {
+		numer >>= 8;
+		denom >>= 8;
+		}
+	return 100 * numer / denom;
+	}
+
 int snagdf () {
 	FILE *mntf;
 	struct mntent *ment;
@@ -47,7 +55,7 @@ int snagdf () {
 				}
 			else {
 				if (debug) fprintf(stderr, "got data\n");
-				if (debug) fprintf(stderr, "bavail %lu blocks %lu favail %lu files %lu bzise %lu\n", vfs.f_bavail, vfs.f_blocks, vfs.f_favail, vfs.f_files, vfs.f_bsize);
+				if (debug) fprintf(stderr, "bavail %lu blocks %lu favail %lu files %lu bsize %lu\n", vfs.f_bavail, vfs.f_blocks, vfs.f_favail, vfs.f_files, vfs.f_bsize);
 				int col;
 				char *sdup = strdup(ment->mnt_dir);
 				char *show;
@@ -71,13 +79,13 @@ int snagdf () {
 						}
 					}
 				if (vfs.f_blocks && vfs.f_bsize) {
-					int bfree = 100 * vfs.f_bavail / vfs.f_blocks;
+					int bfree = hundiv(vfs.f_bavail, vfs.f_blocks);
 					unsigned long megavail = vfs.f_bavail / (1048576 / vfs.f_bsize);
 					col = thresher("Disk_space", bfree);
 					printf("Disk space on %s;%d;DISK %s - %s %lu MB (%d%%) free space|%s=%luMB\n", show, col, sword[col], ment->mnt_dir, megavail, bfree, ment->mnt_dir, megavail);
 					}
 				if (vfs.f_files) {
-					int ifree = 100 * vfs.f_favail / vfs.f_files;
+					int ifree = hundiv(vfs.f_favail, vfs.f_files);
 					unsigned long iavail = vfs.f_favail;
 					col = thresher("Disk_inodes", ifree);
 					printf("Disk inodes on %s;%d;INODES %s - %s %lu inodes (%d%%) free|%s=%lu inodes\n", show, col, sword[col], ment->mnt_dir, iavail, ifree, ment->mnt_dir, iavail);

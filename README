@@ -11,7 +11,9 @@ monitoring.
 * (It can use other transports; ultimately check_snag just has to be able
 to run something that causes snag to be run on the appropriate host with
 standard output coming back.  Netcat, xinetd, or the like could be pressed
-into service.)
+into service.  However, SSH is what was intended.)
+
+* You get a free SSH service check out of this.
 
 * It runs several checks at once, rather than requiring multiple sessions
 to be opened per monitoring cycle.  Most of the standard checks require a
@@ -55,16 +57,7 @@ are fed to the Nagios external command pipe as passive check results.
 Installation
 ------------
 
-No ./configure yet.
-
-Things that may need tweaking:
-
-Makefile: PREFIX is where to install the pieces.
-check_snag.c: NAGIOSRW is the Nagios external command pipe.
-snagmsgs: CONF is the configuration file containing your passive checks,
- and LOG is the Nagios logfile.
-
-After that, make && make install.
+See the file INSTALL in the distribution.
 
 Author/Copyright
 ----------------
