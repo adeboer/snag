@@ -1,0 +1,73 @@
+Welcome to snag, a package for (remote) monitoring under Nagios.
+
+This package competes primarily with the NRPE mechanism used to perform
+checks on remote hosts.  Chief advantages:
+
+* It uses SSH as transport, so it's taking advantage of a package with
+robust security, and which you probably have to have running anyway to
+admin your servers.  You don't have to open up a separate service for
+monitoring.
+
+* (It can use other transports; ultimately check_snag just has to be able
+to run something that causes snag to be run on the appropriate host with
+standard output coming back.  Netcat, xinetd, or the like could be pressed
+into service.)
+
+* It runs several checks at once, rather than requiring multiple sessions
+to be opened per monitoring cycle.  Most of the standard checks require a
+handful of syscalls and can be done more efficiently as a batch.
+
+* Since it's enumerating mounted filesystems, it will do the set of checks
+appropriate to the particular host.  If /var is a filesystem, you get a
+/var check, otherwise not.
+
+* You don't have to configure each check separately; a small Perl script
+is included to check for check results coming back and propose Nagios
+config file additions.
+
+* You get a single check turning red if the host crashes or becomes
+unreachable; it doesn't falsely claim that all the filesystems suddenly
+filled up, etc, as the result of failed NRPE checks.
+
+How it works
+------------
+
+The snag executable generates output that looks something like this:
+
+Disk space on /;1;DISK WARNING - / 2578 MB (19%) free space|/=2578MB
+Disk inodes on /;0;INODES OK - / 1052605 inodes (59%) free|/=1052605 inodes
+Disk space on /home;1;DISK WARNING - /home 9953 MB (19%) free space|/home=9953MB
+Disk inodes on /home;0;INODES OK - /home 6458748 inodes (98%) free|/home=6458748 inodes
+Load average;0;LOAD OK - load average: 0.57 0.55 0.40|load1=0.57 load5=0.55 load15=0.40
+Uptime;0;UPTIME OK - up 21 days|uptime=1825881s
+Swap free;0;SWAP OK - 99% of swap free|swap=99
+Processes;0;PROCS OK - 148 total processes|procs=148
+
+There is a config file that can be used to tune thresholds for these
+standard checks, and to add Nagios Plugin checks.
+
+The check_snag executable runs on the Nagios server, configured as a
+normal Nagios active check.  It gets run by Nagios at the configured
+schedule, and reports OK, WARNING, CRITICAL depending on what happened
+when it tried to run snag on the target host.  Check results it got back
+are fed to the Nagios external command pipe as passive check results.
+
+Installation
+------------
+
+No ./configure yet.
+
+Things that may need tweaking:
+
+Makefile: PREFIX is where to install the pieces.
+check_snag.c: NAGIOSRW is the Nagios external command pipe.
+snagmsgs: CONF is the configuration file containing your passive checks,
+ and LOG is the Nagios logfile.
+
+After that, make && make install.
+
+Author/Copyright
+----------------
+
+Copyright (C) 2006 Anthony de Boer, released under GPL v2.
+

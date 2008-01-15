@@ -1,13 +1,34 @@
 #!/usr/bin/perl -w
 use strict;
 
+my $CONF = '/etc/nagios/services.cfg';
+my $LOG = '/var/nagios/nagios.log';
+my $USE = 'generic-passive';
+
+open(C, $CONF) || die "Cannot open $CONF: $!\n";
+open(L, $LOG) || die "Cannot open $LOG: $!\n";
+
 my %t;
 
-while(<>) {
+while(<L>) {
 	$t{"$1\t$2"} = 1 if /Warning\:  Message queue contained results for service \'(.*)\' on host \'(.*)\'\.  The service could not be found\!/;
 	}
 
+my $svc = '?';
+my $host = '?';
+
+while(<C>) {
+	$svc = $1 if /^\s*service_description\s+(.*)/;
+	$host = $1 if /^\s*host_name\s+(.*)/;
+	if (/^\s*\}/) {
+		delete $t{"$svc\t$host"};
+		}
+	}
+
+my $note = "# add lines to $CONF and sighup nagios\n\n";
+
 for my $k (sort (keys %t)) {
 	my ($svc, $host) = split(/\t/, $k);
-	print "define service{\n\tuse\t\t\tgeneric-passive\n\thost_name\t\t$host\n\tservice_description\t$svc\n}\n\n";
+	print "${note}define service{\n\tuse\t\t\t$USE\n\thost_name\t\t$host\n\tservice_description\t$svc\n}\n\n";
+	$note = '';
 	}

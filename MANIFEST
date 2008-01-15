@@ -2,6 +2,7 @@
 COPYING
 MANIFEST
 Makefile
+README
 TODO
 check_snag.8
 check_snag.c
