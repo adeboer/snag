@@ -15,9 +15,13 @@ into service.  However, SSH is what was intended.)
 
 * You get a free SSH service check out of this.
 
-* It runs several checks at once, rather than requiring multiple sessions
-to be opened per monitoring cycle.  Most of the standard checks require a
-handful of syscalls and can be done more efficiently as a batch.
+* You get a command you can run directly on the host as a quick
+health-check (especially after making system changes!).
+
+* It runs several checks per session, rather than requiring multiple
+sessions to be opened per monitoring cycle.  Most of the standard checks
+require a handful of syscalls and can be done more efficiently as a
+batch.  
 
 * Since it's enumerating mounted filesystems, it will do the set of checks
 appropriate to the particular host.  If /var is a filesystem, you get a
@@ -30,6 +34,10 @@ config file additions.
 * You get a single check turning red if the host crashes or becomes
 unreachable; it doesn't falsely claim that all the filesystems suddenly
 filled up, etc, as the result of failed NRPE checks.
+
+* You don't get several NRPE checks hitting simultaneously and causing a
+load spike negatively affecting the host's primary function.  Snag is
+single-threaded so its maximum load is limited.
 
 How it works
 ------------

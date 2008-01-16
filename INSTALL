@@ -84,4 +84,14 @@ will parse those errors and your existing services.cfg and generate lines
 that should be added to services.cfg.  Do so, SIGHUP Nagios, and you should
 see all of the individual check items.
 
+On Remote Boxes
++++++++++++++++
+
+You need to install this package on remote boxes too, possibly along with
+the Nagios Plugins if you want to run any of them on the remote boxes.
+
+Create a "snag" user, with the snag executable as its shell, and set up an
+unpassphrased SSH key (or use ssh-agent) such that the Nagios server can
+SSH in as the snag user on the remote box.
+
 adb
