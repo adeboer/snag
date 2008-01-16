@@ -87,9 +87,11 @@ int snaginfo() {
 			}
 
 		long fswap = info.totalswap / 100;
-		fswap = info.freeswap / fswap;
-		rc = thresher("Swap_free", fswap);
-		printf("Swap free;%d;SWAP %s - %ld%% of swap free|swap=%ld\n", rc, sword[rc], fswap, fswap);
+		if (fswap) {
+			fswap = info.freeswap / fswap;
+			rc = thresher("Swap_free", fswap);
+			printf("Swap free;%d;SWAP %s - %ld%% of swap free|swap=%ld\n", rc, sword[rc], fswap, fswap);
+			}
 
 		rc = thresher("Processes", info.procs);
 		printf("Processes;%d;PROCS %s - %u total processes|procs=%u\n", rc, sword[rc], info.procs, info.procs);
