@@ -61,6 +61,12 @@ Example:
 
 command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
 
+Note that the check should output just one line of Nagios data, and
+certainly should not output more than 512 bytes.  Snag does not read the
+pipe from the check's standard output until after that exits, since no
+check should output so voluminously much that the pipe blocks waiting to
+be read.
+
 .SH SECURITY
 
 This program does not permit any "interesting" options such as opening

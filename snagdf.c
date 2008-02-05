@@ -1,4 +1,4 @@
-/* snagdf.c
+/* snagdf.c - get disk-related statistics
  *
  *	Copyright (C) 2006,2008 Anthony de Boer
  *
@@ -25,6 +25,9 @@
 
 #define debug 0
 
+/* Convert to percentage, making sure we don't run into arithmetic
+ * overflow.
+ */
 int hundiv (unsigned long numer, unsigned long denom) {
 	if (denom > 1000000) {
 		numer >>= 8;

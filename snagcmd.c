@@ -28,19 +28,30 @@
 
 #include "snag.h"
 
+/* the standardmost Unix shell */
 #define THESHELL "/bin/sh"
 
 static void alcatch(int signo) {
 	exit(1);
 	}
 
+/*
+ * Each cnode is used to store information regarding a process we
+ * started, so that we can handle it appropriately when it exits
+ * to us.
+ *
+ * Since snag itself exits soon thereafter, freeing these would be
+ * more trouble than it's worth.
+ */
+
 struct cnode {
-	char *name;
-	pid_t cpid;
-	int cfd;
-	struct cnode *next;
+	char *name;		/* name of check */
+	pid_t cpid;		/* PID of process that was started */
+	int cfd;		/* descriptor of pipe from process */
+	struct cnode *next;	/* linked list next element */
 	};
 
+/* linked list of cnodes */
 struct cnode *chead = NULL;
 
 void sysdie(char *s) {
@@ -55,12 +66,14 @@ void die(char *s) {
 	exit(3);
 	}
 
+/* initialize signals and set trap for slow ones */
 void setupcmd() {
 	if (signal(SIGCHLD, SIG_DFL) == SIG_ERR) die("signal() failure\n");
 	if (signal(SIGALRM, alcatch) == SIG_ERR) die("signal() failure\n");
 	alarm(8);
 	}
 
+/* start a check.  Args are checkname and command line */
 void startcmd(char *name, char *cmdline) {
 	struct cnode *ncn;
 	int fildes[2];

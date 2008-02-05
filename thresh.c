@@ -1,4 +1,4 @@
-/* thresh.c
+/* thresh.c - threshold processing
  *
  *	Copyright (C) 2006 Anthony de Boer
  *
@@ -23,6 +23,12 @@
 #include "snag.h"
 
 #define HASHSIZE 1009
+
+/*
+ * threshold data is kept in a hash table so that we can look up each
+ * discovered bit of information, see if there are thresholds, and set
+ * severity appropriately.
+ */
 
 int hash(char *s) {
 	int h = 0;

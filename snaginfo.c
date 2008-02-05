@@ -1,4 +1,4 @@
-/* snaginfo.c
+/* snaginfo.c - call sysinfo and process data from it
  *
  *	Copyright (C) 2006,2008 Anthony de Boer
  *
@@ -21,18 +21,15 @@
 #include <sys/sysinfo.h>
 #include "snag.h"
 
-/* kernel internal is 11 but gets standardized to 16 by sys_sysinfo */
+/*
+ * Macros for load average, borrowed from Linux kernel.
+ * Kernel internal is 11 but gets standardized to 16 by sys_sysinfo
+ */
+
 #define FSHIFT 16
 #define FIXED_1 (1<<FSHIFT)
 #define LOAD_INT(x) ((x) >> FSHIFT)
 #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
-
-/*
-
- /usr/nagios/libexec/check_load -w 15,10,5 -c 30,25,20
- OK - load average: 0.12, 0.03, 0.01|load1=0.120000;15.000000;30.000000;0.000000 load5=0.030000;10.000000;25.000000;0.000000 load15=0.010000;5.000000;20.000000;0.000000
-
-*/
 
 int snaginfo() {
 	struct sysinfo info;
@@ -41,6 +38,7 @@ int snaginfo() {
 		return(1);
 		}
 	else {
+		/* processing for load average */
 		int a = info.loads[0] + (FIXED_1/200);
 		int b = info.loads[1] + (FIXED_1/200);
 		int c = info.loads[2] + (FIXED_1/200);
@@ -86,6 +84,7 @@ int snaginfo() {
 			printf("Uptime;%d;UPTIME %s - up %lu %s%s|uptime=%lus\n", rc, statusword(rc), upv, upu, upm, info.uptime);
 			}
 
+		/* processing for percent swap free */
 		long fswap = info.totalswap / 100;
 		if (fswap) {
 			fswap = info.freeswap / fswap;
@@ -93,6 +92,7 @@ int snaginfo() {
 			printf("Swap free;%d;SWAP %s - %ld%% of swap free|swap=%ld\n", rc, statusword(rc), fswap, fswap);
 			}
 
+		/* processing for number of processes */
 		rc = thresher("Processes", info.procs);
 		printf("Processes;%d;PROCS %s - %u total processes|procs=%u\n", rc, statusword(rc), info.procs, info.procs);
 
