@@ -1,6 +1,6 @@
 /* snag.h
  *
- *	Copyright (C) 2006 Anthony de Boer
+ *	Copyright (C) 2006,2008 Anthony de Boer
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of version 2 of the GNU General Public License as
@@ -17,11 +17,20 @@
  *	USA
  */
 
+/* config file */
 #define cfile "/etc/snag.conf"
 
-extern int lineno;
 
+/*
+ * -----------------------------
+ * DEFINE ENTRYPOINTS TO MODULES
+ * -----------------------------
+ */
+
+/* entry to df (disk-full) code in snagdf.c */
 int snagdf();
+
+/* entry to info (system info) code in snaginfo.c */
 int snaginfo();
 
 /* return the name of the numerical status given */
@@ -65,3 +74,6 @@ void startcmd(char *name, char *cmdline);
 
 /* clean up external commands */
 void cleancmd();
+
+/* used by lex and yacc */
+extern int lineno;
