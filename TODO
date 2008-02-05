@@ -7,3 +7,11 @@ Guide to setting up ssh (security check), nagios, etc.
 
 Overrides to ignore filesystems or set unique thresholds
 
+Potential checks:
+ - percent CPU idle
+ - page/swap/fork rates
+ - number of open files
+ - NTP (use regular Nagios check, probably)
+ - mail queue check (delegate that too)
+ - cron and other key processes
+ - zombie procs
