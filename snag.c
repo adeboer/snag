@@ -1,6 +1,6 @@
 /* snag.c
  *
- *	Copyright (C) 2006 Anthony de Boer
+ *	Copyright (C) 2006,2008 Anthony de Boer
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of version 2 of the GNU General Public License as
@@ -18,14 +18,30 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "snag.h"
 
 char *sword[] = { "OK", "WARNING", "CRITICAL", "UNDEF",
 	"OOPS4", "OOPS5", "OOPS6", "OOPS7" };
 
-main(int argc, char *argv[]) {
+void usage() {
+	fprintf(stderr, "Usage: snag [-b]\n");
+	exit(2);
+	}
+
+int main(int argc, char *argv[]) {
 	int rc = 0;
-	hinit(argc == 2 && strcmp(argv[1], "-b") == 0);
+	int hflag;
+	if (argc == 1) {
+		hflag = 0;
+		}
+	else if (argc == 2 && strcmp(argv[1], "-b") == 0) {
+		hflag = 1;
+		}
+	else {
+		usage();
+		}
+	hinit(hflag);
 	setupcmd();
 	if (openconfig()) yyparse();
 	rc |= snagdf();
