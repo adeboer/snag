@@ -1,0 +1,6 @@
+*.o
+check_snag
+lex.yy.c
+snag
+snag.tab.c
+snag.tab.h
