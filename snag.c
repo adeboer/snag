@@ -21,8 +21,17 @@
 #include <stdlib.h>
 #include "snag.h"
 
-char *sword[] = { "OK", "WARNING", "CRITICAL", "UNDEF",
-	"OOPS4", "OOPS5", "OOPS6", "OOPS7" };
+char *statusword(int sw) {
+	char *rw;
+	switch(sw) {
+		case 0: rw = "OK"; break;
+		case 1: rw = "WARNING"; break;
+		case 2: rw = "CRITICAL"; break;
+		case 3: rw = "UNDEF"; break;
+		default: rw = "?OOPS";
+		}
+	return rw;
+	}
 
 void usage() {
 	fprintf(stderr, "Usage: snag [-b]\n");

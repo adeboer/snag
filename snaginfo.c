@@ -57,7 +57,7 @@ int snaginfo() {
 		rc |= gthresher("load15", ci);
 		rc = gnormalize(rc);
 
-		printf("Load average;%d;LOAD %s - load average: %d.%02d %d.%02d %d.%02d|load1=%d.%02d load5=%d.%02d load15=%d.%02d\n", rc, sword[rc], ai, af, bi, bf, ci, cf, ai, af, bi, bf, ci, cf);
+		printf("Load average;%d;LOAD %s - load average: %d.%02d %d.%02d %d.%02d|load1=%d.%02d load5=%d.%02d load15=%d.%02d\n", rc, statusword(rc), ai, af, bi, bf, ci, cf, ai, af, bi, bf, ci, cf);
 
 		rc = thresher("Uptime", info.uptime);
 		if (rc < 3) {
@@ -83,18 +83,18 @@ int snaginfo() {
 					}
 				}
 			upm = (upv == 1) ? "" : "s";
-			printf("Uptime;%d;UPTIME %s - up %lu %s%s|uptime=%lus\n", rc, sword[rc], upv, upu, upm, info.uptime);
+			printf("Uptime;%d;UPTIME %s - up %lu %s%s|uptime=%lus\n", rc, statusword(rc), upv, upu, upm, info.uptime);
 			}
 
 		long fswap = info.totalswap / 100;
 		if (fswap) {
 			fswap = info.freeswap / fswap;
 			rc = thresher("Swap_free", fswap);
-			printf("Swap free;%d;SWAP %s - %ld%% of swap free|swap=%ld\n", rc, sword[rc], fswap, fswap);
+			printf("Swap free;%d;SWAP %s - %ld%% of swap free|swap=%ld\n", rc, statusword(rc), fswap, fswap);
 			}
 
 		rc = thresher("Processes", info.procs);
-		printf("Processes;%d;PROCS %s - %u total processes|procs=%u\n", rc, sword[rc], info.procs, info.procs);
+		printf("Processes;%d;PROCS %s - %u total processes|procs=%u\n", rc, statusword(rc), info.procs, info.procs);
 
 		}
 

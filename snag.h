@@ -19,11 +19,13 @@
 
 #define cfile "/etc/snag.conf"
 
-extern char *sword[];
 extern int lineno;
 
 int snagdf();
 int snaginfo();
+
+/* return the name of the numerical status given */
+char *statusword(int sw);
 
 /* thresher returns a Nagios result, 0=OK, 1=WARNING, 2=CRITICAL, 3=UNDEFINED
  * based on the thing "s" having the specified value.
