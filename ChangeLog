@@ -1,0 +1,199 @@
+2008-02-04 21:47:33 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * Version 0.5
+
+2008-02-04 21:29:56 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * cvsignore/gitignore
+
+2008-02-04 21:40:03 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * commenting
+
+2008-02-04 21:10:28 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * cleanup
+
+2008-02-04 21:06:21 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * statusword cleanup
+
+2008-02-04 20:55:45 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * cleanup
+
+2008-02-04 20:13:06 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * add .gitignore
+
+2008-02-04 20:12:31 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * add list of potential checks to TODO
+
+2008-01-16 11:07:48 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * doc tweaks
+
+2008-01-16 11:06:54 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * skip swap check on swapless machines
+
+2008-01-15 18:38:39 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * Merge branch 'master' into massage
+
+2008-01-15 18:37:43 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * Merge commit '49e63bf1e50760fb7ff54d5a48ceef4aa45bd85f' into massage
+
+2008-01-15 18:37:22 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * Merge commit '97aad9ae374360990faf0a7cc665978fe8bc5a99' into massage
+
+2008-01-15 18:34:27 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * Merge commit 'a4b8bbaabacd36366c2394468a3509c9f912fb54' into massage
+
+2008-01-14 22:58:14 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * Merge /home/adb/git/snag
+
+2008-01-14 22:22:54 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * add 0.4 source tree
+
+2008-01-14 22:19:20 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * add 0.3 source tree
+
+2008-01-14 22:15:03 -0500  Anthony de Boer  <adb@adb.ca>
+
+    * add 0.2 source tree
+
+2006-03-18 22:34:21 +0000  adb  <adb>
+
+    * release
+
+2006-03-18 22:29:54 +0000  adb  <adb>
+
+    * updated
+
+2006-03-18 22:29:30 +0000  adb  <adb>
+
+    * 8-second timeout
+
+2006-03-18 22:28:44 +0000  adb  <adb>
+
+    * work with huge filesystems
+
+2006-03-18 21:45:59 +0000  adb  <adb>
+
+    * updated
+
+2006-03-04 19:27:17 +0000  adb  <adb>
+
+    * new INSTALL file
+
+2006-03-02 22:08:09 +0000  adb  <adb>
+
+    * 0.3
+
+2006-03-02 22:07:21 +0000  adb  <adb>
+
+    * enhance
+
+2006-03-02 21:18:15 +0000  adb  <adb>
+
+    * new README
+
+2006-02-25 14:31:19 +0000  adb  <adb>
+
+    * GPL boilerplate
+
+2006-02-25 14:27:34 +0000  adb  <adb>
+
+    * new
+
+2006-02-25 14:27:00 +0000  adb  <adb>
+
+    * documented
+
+2006-02-25 14:26:39 +0000  adb  <adb>
+
+    * correction
+
+2006-02-25 14:26:31 +0000  adb  <adb>
+
+    * renamed smaster to check_snag
+
+2006-02-25 14:26:09 +0000  adb  <adb>
+
+    * renamed to check_snag.c
+
+2006-02-25 14:25:51 +0000  adb  <adb>
+
+    * new, was smaster.c
+
+2006-02-25 13:35:56 +0000  adb  <adb>
+
+    * dist target
+
+2006-02-25 13:30:25 +0000  adb  <adb>
+
+    * idea
+
+2006-02-25 13:30:10 +0000  adb  <adb>
+
+    * closeconfig
+
+2006-02-25 13:24:26 +0000  adb  <adb>
+
+    * various
+
+2006-02-25 13:23:58 +0000  adb  <adb>
+
+    * cleanup
+
+2006-02-25 13:23:45 +0000  adb  <adb>
+
+    * defaultdumper
+
+2006-02-25 13:23:26 +0000  adb  <adb>
+
+    * command processing
+
+2006-02-25 13:22:55 +0000  adb  <adb>
+
+    * new
+
+2006-02-25 11:01:19 +0000  adb  <adb>
+
+    * integrate parser
+
+2006-02-25 11:00:25 +0000  adb  <adb>
+
+    * update
+
+2006-02-25 11:00:11 +0000  adb  <adb>
+
+    * configfile
+
+2006-02-25 11:00:02 +0000  adb  <adb>
+
+    * expand
+
+2006-02-25 10:59:45 +0000  adb  <adb>
+
+    * remove testing code
+
+2006-02-25 10:30:27 +0000  adb  <adb>
+
+    * new
+
+2006-02-18 17:32:26 +0000  adb  <adb>
+
+    * updated
+
+2005-12-28 19:49:44 +0000  adb  <adb>
+
+    * initial

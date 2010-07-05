@@ -1,6 +1,6 @@
 %{
 
-/* snag.lex
+/* snag_lex.l
  *
  *	Copyright (C) 2006 Anthony de Boer
  *
@@ -22,7 +22,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "snag.tab.h"
+#include "snag_parse.h"
 #include "snag.h"
 %}
 

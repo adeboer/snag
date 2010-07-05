@@ -21,6 +21,7 @@
 #include <mntent.h>
 #include <sys/statvfs.h>
 #include <string.h>
+#include <stdlib.h>
 #include "snag.h"
 
 #define debug 0

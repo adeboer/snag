@@ -1,6 +1,6 @@
 %{
 
-/* snag.yacc
+/* snag_parse.y
  *
  *	Copyright (C) 2006 Anthony de Boer
  *
