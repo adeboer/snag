@@ -1,16 +1,17 @@
 Snag Installation
 -----------------
 
-No ./configure yet.
-
 Things that may need tweaking:
 
-Makefile: PREFIX is where to install the pieces.
 check_snag.c: NAGIOSRW is the Nagios external command pipe.
 snagmsgs: CONF is the configuration file containing your passive checks,
  and LOG is the Nagios logfile.
 
-After that, make && make install.
+After that,
+
+./configure
+make
+(as root) make install
 
 
 Configuration

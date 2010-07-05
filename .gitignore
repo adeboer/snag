@@ -15,6 +15,7 @@ install-sh
 lex.yy.c
 missing
 snag
+snag-*.tar.gz
 snag.tab.c
 snag.tab.h
 snag_lex.c
