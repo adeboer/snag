@@ -12,3 +12,5 @@ snag_SOURCES = snag.c snag.h snagcmd.c snagdf.c snaginfo.c thresh.c \
 	snag_parse.y snag_lex.l
 
 EXTRA_DIST = snagmsgs
+
+man_MANS = check_snag.8 snag.8
