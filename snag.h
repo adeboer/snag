@@ -17,6 +17,11 @@
  *	USA
  */
 
+#include "config.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 /* config file */
 #define cfile "/etc/snag.conf"
 

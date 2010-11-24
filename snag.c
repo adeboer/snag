@@ -17,8 +17,6 @@
  *	USA
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "snag.h"
 
 char *statusword(int sw) {

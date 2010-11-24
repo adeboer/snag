@@ -17,9 +17,8 @@
  *	USA
  */
 
-#include <stdio.h>
-#include <sys/sysinfo.h>
 #include "snag.h"
+#include <sys/sysinfo.h>
 
 /*
  * Macros for load average, borrowed from Linux kernel.
