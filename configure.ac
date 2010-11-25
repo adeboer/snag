@@ -19,7 +19,7 @@ AC_CHECK_LIB([fl], [yywrap])
 AC_CHECK_LIB([kvm], [kvm_getprocs])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h mntent.h stdlib.h string.h sys/statvfs.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h mntent.h stdlib.h string.h sys/statvfs.h sys/time.h unistd.h kvm.h sys/swap.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T
@@ -28,7 +28,7 @@ AC_TYPE_PID_T
 AC_FUNC_FORK
 AC_FUNC_GETMNTENT
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([alarm dup2 getmntent gettimeofday hasmntopt select strchr strdup strerror sysinfo getfsstat])
+AC_CHECK_FUNCS([alarm dup2 getmntent gettimeofday hasmntopt select strchr strdup strerror sysinfo getfsstat kvm_open])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
