@@ -32,7 +32,7 @@ int lineno = 1;
 	long ui;
 	}
 
-%token COMMAND LIMIT NL
+%token COMMAND LIMIT EXPECT IGNORE PROCESS NL
 %token <ui> NUMBER
 %token <string> QSTRING IDENTIFIER
 
@@ -40,7 +40,7 @@ int lineno = 1;
 
 start:	thing | start thing;
 
-thing: limitcmd NL | commandcmd NL | NL;
+thing: limitcmd NL | commandcmd NL | expectcmd NL | ignorecmd NL | proccmd NL | NL;
 
 limitcmd: LIMIT IDENTIFIER NUMBER NUMBER NUMBER NUMBER
 	{
@@ -51,6 +51,34 @@ commandcmd: COMMAND QSTRING QSTRING
 	{
 	startcmd($2, $3);
 	};
+
+expectcmd: EXPECT expectids
+
+expectids: expid | expectids expid
+
+expid: IDENTIFIER
+	{
+	procadd($1, 1, 123);
+	}
+
+ignorecmd: IGNORE ignoreids
+
+ignoreids: ignid | ignoreids ignid
+
+ignid: IDENTIFIER
+	{
+	procadd($1, 0, 123);
+	}
+
+proccmd: PROCESS IDENTIFIER NUMBER NUMBER
+	{
+	procadd($2, $3, $4);
+	}
+
+proccmd: PROCESS QSTRING NUMBER NUMBER
+	{
+	procadd($2, $3, $4);
+	}
 
 %%
 

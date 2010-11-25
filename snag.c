@@ -19,6 +19,8 @@
 
 #include "snag.h"
 
+int showdefaults;
+
 char *statusword(int sw) {
 	char *rw;
 	switch(sw) {
@@ -38,21 +40,20 @@ void usage() {
 
 int main(int argc, char *argv[]) {
 	int rc = 0;
-	int hflag;
 	if (argc == 1) {
-		hflag = 0;
 		}
 	else if (argc == 2 && strcmp(argv[1], "-b") == 0) {
-		hflag = 1;
+		showdefaults = 1;
 		}
 	else {
 		usage();
 		}
-	hinit(hflag);
+	hinit();
 	setupcmd();
 	if (openconfig()) yyparse();
 	rc |= snagdf();
 	rc |= snaginfo();
+	rc |= snagprocs();
 	cleancmd();
 	exit(rc);
 	}

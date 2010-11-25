@@ -18,6 +18,7 @@
  */
 
 #include "snag.h"
+#include "hashtab.h"
 
 #define HASHSIZE 1009
 
@@ -27,44 +28,22 @@
  * severity appropriately.
  */
 
-int hash(char *s) {
-	int h = 0;
-	while(*s) {
-		h += *s++;
-		}
-	return (h % HASHSIZE);
-	}
+HTAB tparams;
 
 struct hnode {
-	char *name;
-	struct hnode *next;
 	long lcrit, lwarn, hwarn, hcrit;
 	};
 
-struct hnode *htab[HASHSIZE];
+HTAB proctab;
 
-int showitems = 0;
+struct pnode {
+	int min, max, conf, running;
+	};
 
-struct hnode *hasher(char *s, int make) {
-	int h = hash(s);
-	struct hnode *p = htab[h];
-	char *s2;
-	while(p) {
-		if (strcmp(s, p->name) == 0) {
-			return p;
-			}
-		p = p->next;
-		}
-	if (make && (s2 = strdup(s)) && (p = (struct hnode *)calloc(1, sizeof (struct hnode)))) {
-		p->name = s2;
-		p->next = htab[h];
-		htab[h] = p;
-		}
-	return p;
-	}
-
-void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit) {
-	struct hnode *hent = hasher(s, 1);
+void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit)
+{
+	struct hnode *hent;
+	hashfind(tparams, s, 1, (void **)&hent);
 	if (!hent) {
 		fprintf(stderr, "memory allocation failure\n");
 		exit(1);
@@ -73,13 +52,14 @@ void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit) {
 	hent->lwarn = lwarn;
 	hent->hwarn = hwarn;
 	hent->hcrit = hcrit;
-	if (showitems) {
+	if (showdefaults) {
 		printf("limit %s %ld %ld %ld %ld\n", s, lcrit, lwarn, hwarn, hcrit);
-		}
 	}
+}
 
-void hinit(int showdefaults) {
-	showitems = showdefaults;
+void hinit() {
+	tparams = hashcreate(sizeof(struct hnode), HASHSIZE);
+	proctab = hashcreate(sizeof(struct pnode), HASHSIZE);
 	hashadd("Disk_space", 3, 20, 110, 120);
 	hashadd("Disk_inodes", 3, 20, 110, 120);
 	hashadd("load1", -1, -1, 15, 30);
@@ -92,9 +72,9 @@ void hinit(int showdefaults) {
 	}
 	
 int thresher(char *name, long val) {
-	struct hnode *hent = hasher(name, 0);
+	struct hnode *hent;
 	int rc;
-	if (hent) {
+	if (hashfind(tparams, name, 0, (void **)&hent)) {
 		if (val > hent->lwarn && val < hent->hwarn) {
 			rc = 0;
 			}
@@ -126,4 +106,74 @@ int gnormalize(int c) {
 		}
 	return c;
 	}
+
+void procadd(char *s, int min, int max)
+{
+	struct pnode *pent;
+	hashfind(proctab, s, 1, (void **)&pent);
+	if (!pent) {
+		fprintf(stderr, "memory allocation failure\n");
+		exit(1);
+	}
+	pent->min = min;
+	pent->max = max;
+	pent->conf = 1;
+}
+
+void procfound(char *s, int awhile)
+{
+	struct pnode *pent;
+	hashfind(proctab, s, 1, (void **)&pent);
+	if (!pent) {
+		fprintf(stderr, "memory allocation failure\n");
+		exit(1);
+	}
+	if (pent->conf == 0) {
+		pent->max = 123;
+		if (awhile) {
+			pent->conf = 2;
+		}
+	}
+	pent->running++;
+}
+
+struct procbuf {
+	char *bptr;
+	int bremain;
+	int status;
+	};
+
+void prociter(const char *name, void *vpent, void *foo)
+{
+	struct pnode *pent = vpent;
+	struct procbuf *pb = foo;
+	/*printf("PROC %s : %d %d %d %d\n", name, pent->min, pent->max, pent->conf, pent->running);*/
+	if (pent->running < pent->min || pent->running > pent->max || pent->conf == 2) {
+		if (pent->running == 0) {
+			pb->status = 2;
+		} else if (pb->status == 0) {
+			pb->status = 1;
+		}
+		int rb = snprintf(pb->bptr, pb->bremain, " %s:%d", name, pent->running);
+		if (rb < pb->bremain) {
+			pb->bremain -= rb;
+			pb->bptr += rb;
+		} else {
+			*(pb->bptr) = '\0';
+		}
+	}
+}
+
+void procfinal()
+{
+	char buff[400];
+	struct procbuf pstr;
+	buff[0] = '\0';
+	pstr.bptr = buff;
+	pstr.bremain = sizeof(buff);
+	pstr.status = 0;
+	hashsort(proctab, prociter, &pstr);
+	char *prx = pstr.status ? "Running" : "All OK";
+	printf("Process list;%d;%s%s\n", pstr.status, prx, buff);
+}
 

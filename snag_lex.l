@@ -43,13 +43,22 @@
 	yylval.ui = atol(yytext);
 	return NUMBER;
 	}
-limit	{
+^limit	{
 	return LIMIT;
 	}
-command {
+^command {
 	return COMMAND;
 	}
-[a-zA-Z][a-zA-Z0-9_]* {
+^expect {
+	return EXPECT;
+	}
+^ignore {
+	return IGNORE;
+	}
+^process {
+	return PROCESS;
+	}
+[a-zA-Z][a-zA-Z0-9_\-]* {
 	yylval.string = strdup(yytext);
 	if (yylval.string == NULL) {
 		yyerror("memory allocation");

@@ -63,10 +63,11 @@ int gthresher(char *s, long val);
 int gnormalize(int c);
 
 /* initialize an internal hash table */
-void hinit(int showdefaults);
+void hinit();
 
-/* add a rule to the internal hash table */
+/* add rules to the internal hash table */
 void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit);
+void procadd(char *s, int min, int max);
 
 /* open the config file, return 1 if ok, 0 if no config file */
 int openconfig();
@@ -85,3 +86,13 @@ void cleancmd();
 
 /* used by lex and yacc */
 extern int lineno;
+
+/* -b flag */
+extern int showdefaults;
+
+/* called for each named process found in process table */
+void procfound(char *s, int awhile);
+
+/* called after process tables is parsed */
+void procfinal();
+
