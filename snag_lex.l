@@ -19,9 +19,6 @@
  *	USA
  */
 
-#include <string.h>
-#include <errno.h>
-
 #include "snag_parse.h"
 #include "snag.h"
 %}

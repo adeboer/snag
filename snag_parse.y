@@ -19,9 +19,6 @@
  *	USA
  */
 
-#include <stdio.h>
-#include <string.h>
-
 #include "snag.h"
 
 void yyerror(char *s);

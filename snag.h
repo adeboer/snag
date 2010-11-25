@@ -21,6 +21,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
 
 /* config file */
 #define cfile "/etc/snag.conf"
