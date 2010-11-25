@@ -1,6 +1,6 @@
 /* snag.c
  *
- *	Copyright (C) 2006,2008 Anthony de Boer
+ *	Copyright (C) 2006,2008,2010 Anthony de Boer
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of version 2 of the GNU General Public License as
