@@ -21,8 +21,6 @@
 
 #define debug 0
 
-void printdisk(char *mntdir, unsigned long blocksize, unsigned long tblocks, unsigned long avblocks, unsigned long tinodes, unsigned long avinodes);
-
 /* Convert to percentage, making sure we don't run into arithmetic
  * overflow.
  */
@@ -33,6 +31,44 @@ int hundiv (unsigned long numer, unsigned long denom) {
 		}
 	return 100 * numer / denom;
 	}
+
+void printdisk(char *mntdir, unsigned long blocksize, unsigned long tblocks, unsigned long avblocks, unsigned long tinodes, unsigned long avinodes)
+{
+	int col;
+	char *sdup = strdup(mntdir);
+	char *show;
+	if (sdup == NULL) {
+		show = "NULL";
+	} else {
+		show = sdup;
+		while(*show) {
+			if (!isalnum(*show) && *show != '/') {
+				*show = '_';
+				}
+			show++;
+		}
+		show = sdup;
+		while(*show == '_') {
+			show++;
+		}
+		if (!*show) {
+			show = "root";
+		}
+	}
+	if (tblocks && blocksize) {
+		int bfree = hundiv(avblocks, tblocks);
+		unsigned long megavail = avblocks / (1048576 / blocksize);
+		col = thresher("Disk_space", bfree);
+		printf("Disk space on %s;%d;DISK %s - %s %lu MB (%d%%) free space|%s=%luMB\n", show, col, statusword(col), mntdir, megavail, bfree, mntdir, megavail);
+	}
+	if (tinodes) {
+		int ifree = hundiv(avinodes, tinodes);
+		unsigned long iavail = avinodes;
+		col = thresher("Disk_inodes", ifree);
+		printf("Disk inodes on %s;%d;INODES %s - %s %lu inodes (%d%%) free|%s=%lu inodes\n", show, col, statusword(col), mntdir, iavail, ifree, mntdir, iavail);
+	}
+	if (sdup) free(sdup);
+}
 
 #ifdef HAVE_GETMNTENT
 #include <mntent.h>
@@ -117,40 +153,3 @@ int snagdf () {
 #endif /* HAVE_GETFSSTAT */
 #endif /* HAVE_GETMNTENT */
 
-void printdisk(char *mntdir, unsigned long blocksize, unsigned long tblocks, unsigned long avblocks, unsigned long tinodes, unsigned long avinodes)
-{
-	int col;
-	char *sdup = strdup(mntdir);
-	char *show;
-	if (sdup == NULL) {
-		show = "NULL";
-	} else {
-		show = sdup;
-		while(*show) {
-			if (!isalnum(*show) && *show != '/') {
-				*show = '_';
-				}
-			show++;
-		}
-		show = sdup;
-		while(*show == '_') {
-			show++;
-		}
-		if (!*show) {
-			show = "root";
-		}
-	}
-	if (tblocks && blocksize) {
-		int bfree = hundiv(avblocks, tblocks);
-		unsigned long megavail = avblocks / (1048576 / blocksize);
-		col = thresher("Disk_space", bfree);
-		printf("Disk space on %s;%d;DISK %s - %s %lu MB (%d%%) free space|%s=%luMB\n", show, col, statusword(col), mntdir, megavail, bfree, mntdir, megavail);
-	}
-	if (tinodes) {
-		int ifree = hundiv(avinodes, tinodes);
-		unsigned long iavail = avinodes;
-		col = thresher("Disk_inodes", ifree);
-		printf("Disk inodes on %s;%d;INODES %s - %s %lu inodes (%d%%) free|%s=%lu inodes\n", show, col, statusword(col), mntdir, iavail, ifree, mntdir, iavail);
-	}
-	if (sdup) free(sdup);
-}
