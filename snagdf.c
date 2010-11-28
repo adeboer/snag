@@ -32,42 +32,59 @@ int hundiv (unsigned long numer, unsigned long denom) {
 	return 100 * numer / denom;
 	}
 
-void printdisk(char *mntdir, unsigned long blocksize, unsigned long tblocks, unsigned long avblocks, unsigned long tinodes, unsigned long avinodes)
+/*
+ * Handle one mountpoint:
+ * mntdir - path to mountpoint
+ * mntdev - device name
+ * funny - flags like read-only that indicate to probably skip this mount
+ * blocksize
+ * tblocks - total blocks
+ * avblocks - number of blocks free
+ * tinodes - total inodes
+ * avinodes - number of inodes free
+ */
+
+void printdisk(char *mntdir, char *mntdev, int funny, unsigned long blocksize, unsigned long tblocks, unsigned long avblocks, unsigned long tinodes, unsigned long avinodes)
 {
 	int col;
+	/* check if mntdev is other than /dev/...? */
+	funny |= (*mntdev != '/');
+	if (funny) return;
+
 	char *sdup = strdup(mntdir);
-	char *show;
 	if (sdup == NULL) {
-		show = "NULL";
-	} else {
-		show = sdup;
-		while(*show) {
-			if (!isalnum(*show) && *show != '/') {
-				*show = '_';
-				}
-			show++;
-		}
-		show = sdup;
-		while(*show == '_') {
-			show++;
-		}
-		if (!*show) {
-			show = "root";
-		}
+		/* memallocfail */
+		return;
 	}
+	char *show = sdup;
+	while(*show) {
+		if (!isalnum(*show) && *show != '/') {
+			*show = '_';
+			}
+		show++;
+	}
+	show = sdup;
+	while(*show == '_') {
+		show++;
+	}
+	if (!*show) {
+		show = "root";
+	}
+
+	int specific = (thresher(show, 12345) < 3);
+
 	if (tblocks && blocksize) {
 		int bfree = hundiv(avblocks, tblocks);
 		unsigned long megavail = avblocks / (1048576 / blocksize);
-		col = thresher("Disk_space", bfree);
+		col = thresher(specific ? show : "Disk_space", bfree);
 		printf("Disk space on %s;%d;DISK %s - %s %lu MB (%d%%) free space|%s=%luMB\n", show, col, statusword(col), mntdir, megavail, bfree, mntdir, megavail);
 	}
 	if (tinodes) {
 		int ifree = hundiv(avinodes, tinodes);
-		unsigned long iavail = avinodes;
-		col = thresher("Disk_inodes", ifree);
-		printf("Disk inodes on %s;%d;INODES %s - %s %lu inodes (%d%%) free|%s=%lu inodes\n", show, col, statusword(col), mntdir, iavail, ifree, mntdir, iavail);
+		col = thresher(specific ? show : "Disk_inodes", ifree);
+		printf("Disk inodes on %s;%d;INODES %s - %s %lu inodes (%d%%) free|%s=%lu inodes\n", show, col, statusword(col), mntdir, avinodes, ifree, mntdir, avinodes);
 	}
-	if (sdup) free(sdup);
+	free(sdup);
 }
 
 #ifdef HAVE_GETMNTENT
@@ -83,24 +100,20 @@ int snagdf () {
 	if (!mntf) return(1);
 
 	while (ment = getmntent(mntf)) {
-		if (*(ment->mnt_fsname) == '/') {
-			if (debug) fprintf(stderr, "looking at fsname %s on dir %s of type %s with options %s.\n", ment->mnt_fsname, ment->mnt_dir, ment->mnt_type, ment->mnt_opts);
-			int rc = statvfs(ment->mnt_dir, &vfs);
-			if (rc) {
-				perror(ment->mnt_dir);
-				rc = 1;
-				}
-			else if (hasmntopt(ment, "ro")) {
-				if (debug) fprintf(stderr, "it is readonly\n");
-				}
-			else {
-				if (debug) fprintf(stderr, "got data\n");
-				if (debug) fprintf(stderr, "bavail %lu blocks %lu favail %lu files %lu bsize %lu\n", vfs.f_bavail, vfs.f_blocks, vfs.f_favail, vfs.f_files, vfs.f_bsize);
-				printdisk(ment->mnt_dir, vfs.f_bsize,
-					vfs.f_blocks, vfs.f_bavail,
-					vfs.f_files, vfs.f_favail);
-				}
+		if (debug) fprintf(stderr, "looking at fsname %s on dir %s of type %s with options %s.\n", ment->mnt_fsname, ment->mnt_dir, ment->mnt_type, ment->mnt_opts);
+		int rc = statvfs(ment->mnt_dir, &vfs);
+		if (rc) {
+			perror(ment->mnt_dir);
+			rc = 1;
+			continue;
 			}
+		int funny = (hasmntopt(ment, "ro") != NULL) ||
+			(hasmntopt(ment, "bind") != NULL);
+		if (debug) fprintf(stderr, "bavail %lu blocks %lu favail %lu files %lu bsize %lu\n", vfs.f_bavail, vfs.f_blocks, vfs.f_favail, vfs.f_files, vfs.f_bsize);
+		printdisk(ment->mnt_dir, ment->mnt_fsname,
+			funny, vfs.f_bsize,
+			vfs.f_blocks, vfs.f_bavail,
+			vfs.f_files, vfs.f_favail);
 		}
 
 	endmntent(mntf);
@@ -113,7 +126,8 @@ int snagdf () {
 #include <sys/param.h>
 #include <sys/mount.h>
 
-int snagdf () {
+int snagdf ()
+{
 	size_t n1, n2, bs;
 	struct statfs * fsbuf, * fscur;
 	int i;
@@ -134,13 +148,9 @@ int snagdf () {
 	fscur = fsbuf;
 	if (debug && n1 != n2) fprintf(stderr, "n1 %d n2 %d\n", n1, n2);
 	for (i=0; i<n2; i++) {
-		if (!(fscur->f_flags & MNT_RDONLY) &&
-			fscur->f_mntfromname[0] == '/' &&
-			fscur->f_mntfromname[1] == 'd' &&
-			fscur->f_mntfromname[2] == 'e' &&
-			fscur->f_mntfromname[3] == 'v' &&
-			fscur->f_mntfromname[4] == '/')
-		printdisk(fscur->f_mntonname, fscur->f_bsize,
+		int funny = (fscur->f_flags & MNT_RDONLY);
+		printdisk(fscur->f_mntonname, fscur->f_mntfromname,
+			funny, fscur->f_bsize,
 			fscur->f_blocks, fscur->f_bavail,
 			fscur->f_files, fscur->f_ffree);
 		fscur++;
