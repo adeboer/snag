@@ -61,7 +61,7 @@
 ^nodf {
 	return NODF;
 	}
-[a-zA-Z\/][a-zA-Z0-9_\-\/]* {
+[a-zA-Z\/][a-zA-Z0-9_\-\/\.]* {
 	yylval.string = strdup(yytext);
 	if (yylval.string == NULL) {
 		yyerror("memory allocation");
