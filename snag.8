@@ -27,46 +27,6 @@ to output its internal configuration defaults in the same
 format as the configuration file.  Note that any existing configuration
 file is not read, and normal processing does not occur.
 
-.SH CONFIGURATION
-
-Directives in
-.I /etc/snag.conf
-(if present) will be used to modify the operation of this program.
-
-Whitespace, emty lines, and comments are allowed.
-
-.TP
-.B limit item_ID LOW_CRITICAL LOW_WARNING HIGH_WARNING HIGH_CRITICAL
-
-A "limit" directive can set alerting thresholds for detected numeric
-values.  See the -b output for identifiers and default values.  A line
-from it can be copied into the configuration file and modified.  The
-four numeric values are LOW_CRITICAL, LOW_WARNING, HIGH_WARNING, and
-HIGH_CRITICAL.  A value between the middle pair is considered OK, while
-a value between the outer pair merits a WARNING, and a value that meets
-either critical bound generates a CRITICAL alert.
-
-Example:
-
-limit Disk_space 3 10 110 120
-
-.TP
-.B command "description" "commandline"
-
-This causes an external command (a Nagios check) to be run by snag and
-its output to be included with snag's output.  The description and
-commandline must both be given as quoted strings.
-
-Example:
-
-command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
-
-Note that the check should output just one line of Nagios data, and
-certainly should not output more than 512 bytes.  Snag does not read the
-pipe from the check's standard output until after that exits, since no
-check should output so voluminously much that the pipe blocks waiting to
-be read.
-
 .SH SECURITY
 
 This program does not permit any "interesting" options such as opening
@@ -81,6 +41,7 @@ Protecting the account used would require attention to SSH configuration.
 
 .SH SEE ALSO
 
+.IR snag.conf (5),
 .IR check_snag (8)
 
 .SH AUTHOR
@@ -88,7 +49,7 @@ Anthony de Boer <adb@leftmind.net>
 
 .SH LICENSE
 
-Copyright (C) 2006 Anthony de Boer
+Copyright (C) 2006-2010 Anthony de Boer
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of version 2 of the GNU General Public License as

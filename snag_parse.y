@@ -32,15 +32,17 @@ int lineno = 1;
 	long ui;
 	}
 
-%token COMMAND LIMIT EXPECT IGNORE PROCESS NL
+%token COMMAND LIMIT EXPECT IGNORE PROCESS NODF NL
 %token <ui> NUMBER
 %token <string> QSTRING IDENTIFIER
 
 %%
 
-start:	thing | start thing;
+start:	cfgline | start cfgline;
 
-thing: limitcmd NL | commandcmd NL | expectcmd NL | ignorecmd NL | proccmd NL | NL;
+cfgline: thing NL | NL;
+
+thing: limitcmd | commandcmd | expectcmd | ignorecmd | proccmd | nodf | setavar;
 
 limitcmd: LIMIT IDENTIFIER NUMBER NUMBER NUMBER NUMBER
 	{
@@ -58,7 +60,7 @@ expectids: expid | expectids expid
 
 expid: IDENTIFIER
 	{
-	procadd($1, 1, 123);
+	procadd($1, 1, -1);
 	}
 
 ignorecmd: IGNORE ignoreids
@@ -67,7 +69,7 @@ ignoreids: ignid | ignoreids ignid
 
 ignid: IDENTIFIER
 	{
-	procadd($1, 0, 123);
+	procadd($1, 0, -1);
 	}
 
 proccmd: PROCESS IDENTIFIER NUMBER NUMBER
@@ -78,6 +80,16 @@ proccmd: PROCESS IDENTIFIER NUMBER NUMBER
 proccmd: PROCESS QSTRING NUMBER NUMBER
 	{
 	procadd($2, $3, $4);
+	}
+
+nodf: NODF IDENTIFIER
+	{
+	setvar($2, 1);
+	}
+
+setavar: IDENTIFIER '=' NUMBER
+	{
+	setvar($1, $3);
 	}
 
 %%

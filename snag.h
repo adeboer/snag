@@ -68,6 +68,7 @@ void hinit();
 /* add rules to the internal hash table */
 void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit);
 void procadd(char *s, int min, int max);
+void setvar(char *s, int value);
 
 /* open the config file, return 1 if ok, 0 if no config file */
 int openconfig();
@@ -95,4 +96,7 @@ void procfound(char *s, int awhile);
 
 /* called after process tables is parsed */
 void procfinal();
+
+/* get an integer parameter */
+int getvar(const char *s);
 

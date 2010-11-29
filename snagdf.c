@@ -47,9 +47,6 @@ int hundiv (unsigned long numer, unsigned long denom) {
 void printdisk(char *mntdir, char *mntdev, int funny, unsigned long blocksize, unsigned long tblocks, unsigned long avblocks, unsigned long tinodes, unsigned long avinodes)
 {
 	int col;
-	/* check if mntdev is other than /dev/...? */
-	funny |= (*mntdev != '/');
-	if (funny) return;
 
 	char *sdup = strdup(mntdir);
 	if (sdup == NULL) {
@@ -72,14 +69,24 @@ void printdisk(char *mntdir, char *mntdev, int funny, unsigned long blocksize, u
 	}
 
 	int specific = (thresher(show, 12345) < 3);
+	int showme = specific;
 
-	if (tblocks && blocksize) {
+	if (!specific) {
+		/* check if mntdev is other than /dev/...? */
+		if (funny || *mntdev != '/' || getvar(show)) {
+			showme = 0;
+		} else {
+			showme = 1;
+		}
+	}
+
+	if (showme && tblocks && blocksize) {
 		int bfree = hundiv(avblocks, tblocks);
 		unsigned long megavail = avblocks / (1048576 / blocksize);
 		col = thresher(specific ? show : "Disk_space", bfree);
 		printf("Disk space on %s;%d;DISK %s - %s %lu MB (%d%%) free space|%s=%luMB\n", show, col, statusword(col), mntdir, megavail, bfree, mntdir, megavail);
 	}
-	if (tinodes) {
+	if (showme && tinodes) {
 		int ifree = hundiv(avinodes, tinodes);
 		col = thresher(specific ? show : "Disk_inodes", ifree);
 		printf("Disk inodes on %s;%d;INODES %s - %s %lu inodes (%d%%) free|%s=%lu inodes\n", show, col, statusword(col), mntdir, avinodes, ifree, mntdir, avinodes);
@@ -97,7 +104,7 @@ int snagdf () {
 	int rc = 0;
 
 	mntf = setmntent("/etc/mtab", "r");
-	if (!mntf) return(1);
+	if (!mntf) return 1;
 
 	while (ment = getmntent(mntf)) {
 		if (debug) fprintf(stderr, "looking at fsname %s on dir %s of type %s with options %s.\n", ment->mnt_fsname, ment->mnt_dir, ment->mnt_type, ment->mnt_opts);
@@ -117,7 +124,7 @@ int snagdf () {
 		}
 
 	endmntent(mntf);
-	return(rc);
+	return rc;
 	}
 #else
 

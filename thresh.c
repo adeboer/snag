@@ -40,6 +40,12 @@ struct pnode {
 	int min, max, conf, running;
 	};
 
+HTAB vartab;
+
+struct vnode {
+	int value;
+	};
+
 void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit)
 {
 	struct hnode *hent;
@@ -60,6 +66,7 @@ void hashadd(char *s, long lcrit, long lwarn, long hwarn, long hcrit)
 void hinit() {
 	tparams = hashcreate(sizeof(struct hnode), HASHSIZE);
 	proctab = hashcreate(sizeof(struct pnode), HASHSIZE);
+	vartab = hashcreate(sizeof(struct vnode), HASHSIZE);
 	hashadd("Disk_space", 3, 20, 110, 120);
 	hashadd("Disk_inodes", 3, 20, 110, 120);
 	hashadd("load1", -1, -1, 15, 30);
@@ -68,6 +75,9 @@ void hinit() {
 	hashadd("Uptime", -1, 3600, 42768000, 42949672);
 	hashadd("Swap_free", 10, 50, 110, 120);
 	hashadd("Processes", -1, -1, 150, 200);
+	setvar("sysuidmax", 999);
+	setvar("transient_time", 1000);
+	setvar("max_same_proc", 10);
 	if (showdefaults) exit(0);
 	}
 	
@@ -129,7 +139,7 @@ void procfound(char *s, int awhile)
 		exit(1);
 	}
 	if (pent->conf == 0) {
-		pent->max = 123;
+		pent->max = -1;
 		if (awhile) {
 			pent->conf = 2;
 		}
@@ -148,7 +158,9 @@ void prociter(const char *name, void *vpent, void *foo)
 	struct pnode *pent = vpent;
 	struct procbuf *pb = foo;
 	/*printf("PROC %s : %d %d %d %d\n", name, pent->min, pent->max, pent->conf, pent->running);*/
-	if (pent->running < pent->min || pent->running > pent->max || pent->conf == 2) {
+	int realmax = pent->max;
+	if (realmax < 0) realmax = getvar("max_same_proc");
+	if (pent->running < pent->min || pent->running > realmax || pent->conf == 2) {
 		if (pent->running == 0) {
 			pb->status = 2;
 		} else if (pb->status == 0) {
@@ -177,3 +189,25 @@ void procfinal()
 	printf("Process list;%d;%s%s\n", pstr.status, prx, buff);
 }
 
+void setvar(char *s, int val)
+{
+	struct vnode *vent;
+	hashfind(vartab, s, 1, (void **)&vent);
+	if (!vent) {
+		fprintf(stderr, "memory allocation failure\n");
+		exit(1);
+	}
+	vent->value = val;
+	if (showdefaults) {
+		printf("%s = %d\n", s, val);
+	}
+}
+
+int getvar(const char *name)
+{
+	struct vnode *vent;
+	if (hashfind(vartab, name, 0, (void **)&vent)) {
+		return vent->value;
+	}
+	return 0;
+}

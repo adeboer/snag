@@ -1,11 +1,13 @@
 
 Portability (find out how other Unicies do things)
 
+Presently developed and tested on a Linux 2.6 box, with code that
+has in the past been tested on OpenBSD and FreeBSD.  Intending to
+test on FreeBSD and Solaris as I have access to instances of those.
+
 Include syntax, use yywrap() chaining with a queue or stack of files
 
 Guide to setting up ssh (security check), nagios, etc.
-
-Overrides to ignore filesystems or set unique thresholds
 
 Potential checks:
  - percent CPU idle
@@ -15,3 +17,4 @@ Potential checks:
  - mail queue check (delegate that too)
  - cron and other key processes
  - zombie procs
+

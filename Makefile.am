@@ -28,7 +28,7 @@ check_snag_SOURCES = check_snag.c
 snag_SOURCES = snag.c snag.h snagcmd.c snagdf.c snaginfo.c thresh.c \
 	snag_parse.y snag_lex.l snagprocs.c hashtab.c hashtab.h
 
-man_MANS = check_snag.8 snag.8
+man_MANS = check_snag.8 snag.8 snag.conf.5
 
 EXTRA_DIST = snagmsgs $(man_MANS)
 

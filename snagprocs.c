@@ -25,9 +25,6 @@
 #include <fcntl.h>
 #include <time.h>
 
-#define SYSUIDMAX 999
-#define MAXTRANSIENT 1000
-
 /*
  * Linux: getting the process name is too much fun.  The string in
  * /proc/#/stat is truncated at 15 characters, and too many Linux
@@ -49,13 +46,15 @@
 
 int snagprocs()
 {
+	int sysuidmax = getvar("sysuidmax");
+	int transient = getvar("transient_time");
 	time_t now = time(NULL);
 	long tix = sysconf(_SC_CLK_TCK);
-	printf("Clock ticks %ld\n", tix);
-		FILE *fp = fopen("/proc/self/stat", "r");
-		if (fp == NULL) {
-			exit(1);
-		}
+	FILE *fp = fopen("/proc/self/stat", "r");
+	if (fp == NULL) {
+		perror("/proc/self/stat");
+		return 1;
+	}
 	unsigned long long mystartj;
 	int nelts = fscanf(fp,
 		"%*d (%*s %*s %*d %*d %*d %*d %*d %*u %*u "
@@ -90,7 +89,7 @@ int snagprocs()
 		snprintf(bufr, sizeof(bufr), "/proc/%s", de->d_name);
 		struct stat sbuf;
 		if (stat(bufr, &sbuf) == -1) continue;
-		if (sbuf.st_uid > SYSUIDMAX) continue;
+		if (sbuf.st_uid > sysuidmax) continue;
 		snprintf(bufr, sizeof(bufr), "/proc/%s/stat", de->d_name);
 		FILE *fp = fopen(bufr, "r");
 		if (fp == NULL) continue;
@@ -109,7 +108,7 @@ int snagprocs()
 
 		/* convert process start clock to seconds runtime */
 		unsigned long long sex = (mystartj - startj) / tix;
-		int oldproc = (sex > MAXTRANSIENT);
+		int oldproc = (sex > transient);
 
 		procfound(bufr, oldproc);
 	}
