@@ -28,9 +28,41 @@
 #define SYSUIDMAX 999
 #define MAXTRANSIENT 1000
 
+/*
+ * Linux: getting the process name is too much fun.  The string in
+ * /proc/#/stat is truncated at 15 characters, and too many Linux
+ * GUI designers have never heard of Unix and create executables
+ * with terribly long names.  The string in /proc/#/cmdline will
+ * be the whole thing but can be modified at runtime by argv-frobbing.
+ *
+ * /proc/#/stat has no clear indicator of a kernel thread, but cmdline
+ * will read as zero bytes for kernel threads.  For added joy, though,
+ * cmdline always stats as a zero-byte file even if reading will find
+ * data.
+ *
+ * We ignore processes from users past SYSUIDMAX.
+ *
+ * Setuid/setgid result in things like stat and cmdline being root-owned
+ * while the directory itself belongs to the user, so we have to stat
+ * that to find out whose process this is.
+ */
+
 int snagprocs()
 {
 	time_t now = time(NULL);
+	long tix = sysconf(_SC_CLK_TCK);
+	printf("Clock ticks %ld\n", tix);
+		FILE *fp = fopen("/proc/self/stat", "r");
+		if (fp == NULL) {
+			exit(1);
+		}
+	unsigned long long mystartj;
+	int nelts = fscanf(fp,
+		"%*d (%*s %*s %*d %*d %*d %*d %*d %*u %*u "
+		"%*u %*u %*u %*u %*u %*d %*d %*d %*d %*d "
+		"%*d %llu ",
+		&mystartj);
+	fclose(fp);
 	DIR *dp = opendir("/proc");
 	if (dp == NULL) {
 		perror("/proc");
@@ -48,27 +80,38 @@ int snagprocs()
 			continue;
 		}
 		int fd = open(bufr, O_RDONLY);
-		/* any errors reading file likely races from procs exiting */
-		struct stat sbuf;
-		if (fstat(fd, &sbuf) == -1) continue;
-		if (sbuf.st_uid > SYSUIDMAX) continue;
-		unsigned int age = now - sbuf.st_mtime;
-		int oldproc = (age > MAXTRANSIENT);
 		if (fd == -1) continue;
+		/* any errors reading file likely races from procs exiting */
 		int rb = read(fd, bufr, sizeof(bufr) - 1);
 		/* zero bytes would be a kernel thread */
 		if (rb <= 0) continue;
-		bufr[rb] = '\0';
-		int ec = strcspn(bufr, " \t:");
-		bufr[ec] = '\0';
-		char *ls = rindex(bufr, '/');
-		if (ls == NULL) {
-			ls = bufr;
-		} else {
-			ls++;
-		}
-		/*printf("%s : %s by %d %s\n", de->d_name, ls, sbuf.st_uid, oldproc ? "OLD" : "NEW");*/
-		procfound(ls, oldproc);
+		/* stat the directory */
+		/* shorter name than cmdline, will work if that one did */
+		snprintf(bufr, sizeof(bufr), "/proc/%s", de->d_name);
+		struct stat sbuf;
+		if (stat(bufr, &sbuf) == -1) continue;
+		if (sbuf.st_uid > SYSUIDMAX) continue;
+		snprintf(bufr, sizeof(bufr), "/proc/%s/stat", de->d_name);
+		FILE *fp = fopen(bufr, "r");
+		if (fp == NULL) continue;
+		char pstate;
+		unsigned long long startj;
+		int nelts = fscanf(fp,
+			"%*d (%1023s %1c %*d %*d %*d %*d %*d %*u %*u "
+			"%*u %*u %*u %*u %*u %*d %*d %*d %*d %*d "
+			"%*d %llu ",
+			bufr, &pstate, &startj);
+		fclose(fp);
+		if (nelts != 3 || pstate == 'Z') continue;
+
+		char *closeparen = index(bufr, ')');
+		if (closeparen) *closeparen = '\0';
+
+		/* convert process start clock to seconds runtime */
+		unsigned long long sex = (mystartj - startj) / tix;
+		int oldproc = (sex > MAXTRANSIENT);
+
+		procfound(bufr, oldproc);
 	}
 	closedir(dp);
 	procfinal();
