@@ -1,6 +1,6 @@
 /* snag.c
  *
- *	Copyright (C) 2006,2008,2010 Anthony de Boer
+ *	Copyright (C) 2006,2008,2010,2011 Anthony de Boer
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of version 2 of the GNU General Public License as
@@ -53,7 +53,6 @@ int main(int argc, char *argv[]) {
 	if (openconfig()) yyparse();
 	rc |= snagdf();
 	rc |= snaginfo();
-	rc |= snagprocs();
 	cleancmd();
 	exit(rc);
 	}

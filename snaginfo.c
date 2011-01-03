@@ -1,6 +1,6 @@
 /* snaginfo.c - call sysinfo and process data from it
  *
- *	Copyright (C) 2006,2008,2010 Anthony de Boer
+ *	Copyright (C) 2006,2008,2010,2011 Anthony de Boer
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of version 2 of the GNU General Public License as
@@ -111,7 +111,7 @@ int snaginfo() {
 		printuptime(info.uptime);
 		printswap(info.totalswap, info.freeswap);
 		printprocs(info.procs);
-		return 0;
+		return snagprocs();
 	}
 }
 
@@ -180,10 +180,27 @@ int snaginfo()
 		kvm_getswapinfo(kd, &kswap, 1, 0);
 		printswap(kswap.ksw_total, kswap.ksw_total - kswap.ksw_used);
 		unsigned int nprocs;
-		if (kvm_getprocs(kd, KERN_PROC_PROC, 0, &nprocs) == NULL) {
+		struct kinfo_proc *kip;
+		kip = kvm_getprocs(kd, KERN_PROC_PROC, 0, &nprocs);
+		if (kip == NULL) {
 			printf("kvm_getprocs failed\n");
 		} else {
+			int proci;
+			int sysuidmax = getvar("sysuidmax");
+			int transient = getvar("transient_time");
+			struct timeval now;
+			gettimeofday(&now, NULL);
 			printprocs(nprocs);
+			for (proci = 0; proci < nprocs; proci++) {
+				unsigned long long sex = now.tv_sec -
+					kip->ki_start.tv_sec;
+				int oldproc = (sex > transient);
+				if (kip->ki_uid <= sysuidmax) {
+					procfound(kip->ki_comm, oldproc);
+				}
+				kip++;
+			}
+			procfinal();
 		}
 	}
 	kvm_close(kd);
