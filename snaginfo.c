@@ -79,6 +79,7 @@ void printprocs(unsigned int nprocs)
 #ifdef HAVE_SYSINFO
 
 #include <sys/sysinfo.h>
+#include <sys/stat.h>
 
 /*
  * Macros for load average, borrowed from Linux kernel.
@@ -92,6 +93,16 @@ void printprocs(unsigned int nprocs)
 
 int snaginfo() {
 	struct sysinfo info;
+	struct stat sbuf;
+	int gotuptime = 0;
+
+	if (stat("/proc/kmsg", &sbuf) != -1) {
+		time_t now = time(NULL);
+		unsigned long uptime = now - sbuf.st_mtime;
+		printuptime(uptime);
+		gotuptime = 1;
+	}
+
 	if (sysinfo(&info)) {
 		perror("sysinfo");
 		return 1;
@@ -108,7 +119,7 @@ int snaginfo() {
 		int cf = LOAD_FRAC(c);
 
 		printload(ai, af, bi, bf, ci, cf);
-		printuptime(info.uptime);
+		if (!gotuptime) printuptime(info.uptime);
 		printswap(info.totalswap, info.freeswap);
 		printprocs(info.procs);
 		return snagprocs();
