@@ -1,6 +1,6 @@
 /* check_snag.c
  *
- *	Copyright (C) 2005 Anthony de Boer
+ *	Copyright (C) 2005,2011 Anthony de Boer
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of version 2 of the GNU General Public License as
@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
 #include <errno.h>
 #include <sys/time.h>
 #include <fcntl.h>
@@ -148,7 +147,6 @@ void usage() {
 int main (int argc, char **argv) {
 
 	int i, fildes[2], pid, wpid, status, flags, es;
-	struct stat sbuf;
 	int nagtest = 0;
 
 	while(1) {
