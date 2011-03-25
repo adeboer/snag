@@ -206,7 +206,7 @@ int snaginfo()
 				unsigned long long sex = now.tv_sec -
 					kip->ki_start.tv_sec;
 				int oldproc = (sex > transient);
-				if (kip->ki_uid <= sysuidmax) {
+				if (kip->ki_uid <= sysuidmax && kip->ki_jid == 0) {
 					procfound(kip->ki_comm, oldproc);
 				}
 				kip++;
