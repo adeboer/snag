@@ -18,3 +18,5 @@ Potential checks:
  - cron and other key processes
  - zombie procs
 
+Avoid statting NFS in case stale.
+
