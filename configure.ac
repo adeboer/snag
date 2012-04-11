@@ -19,7 +19,7 @@
 #	USA
 
 AC_PREREQ([2.65])
-AC_INIT([snag], [0.7], [adb@adb.ca])
+AC_INIT([snag], [0.8], [adb@adb.ca])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([snag.c])
 AC_CONFIG_HEADERS([config.h])
