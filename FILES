@@ -1,0 +1,44 @@
+
+check_snag.c:#define NAGIOSRW "/var/nagios/rw/nagios.cmd"
+snagmsgs:my $LOG = '/var/nagios/nagios.log';
+snagmsgs:my $CONF = '/etc/nagios/services.cfg';
+
+
+
+
+
+check_snag.8:  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
+check_snag.8:  	/usr/local/bin/snag
+check_snag.8:  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
+check_snag.8:  	/usr/bin/ssh snag@$HOSTADDRESS$
+
+snag.conf.5:command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
+
+snagmsgs:#!/usr/bin/perl -w
+
+snag.8:.I /etc/snag.conf
+snag.conf.5:.I /etc/snag.conf
+snag.conf.5:.I /etc/snag.conf
+snag.h:#define cfile "/etc/snag.conf"
+
+snagdf.c:	mntf = setmntent("/etc/mtab", "r");
+
+FreeBSD:
+ NAGIOSRW 	/var/spool/nagios/rw/nagios.cmd
+ NAGIOSLOG	/var/spool/nagios/nagios.log
+ NAGIOSETC	/usr/local/etc/nagios
+ NAGIOSCFG	/usr/local/etc/nagios/snagchecks.cfg
+ NAGIOSLIB	/usr/local/libexec/nagios/
+ PERL		/usr/bin/perl
+ SSH		/usr/bin/ssh
+
+Gentoo?:
+ NAGIOSRW
+ NAGIOSLIB	/usr/lib/nagios/plugins
+ NAGIOSVAR	/var/nagios
+ NAGIOSETC	/etc/nagios
+ NAGIOSRW	/var/nagios/rw/nagios.cmd
+
+OLD:
+ NAGIOSLIB	/usr/nagios/libexec
+
