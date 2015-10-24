@@ -36,13 +36,16 @@ define command{
 
 define command{
   command_name  check_self
-  command_line  /usr/local/bin/check_snag $HOSTNAME$ /usr/local/bin/snag
+  command_line  MY_PLUGINS_DIR/check_snag $HOSTNAME$ MY_BIN_DIR/snag
   }
 
 define command{
   command_name  check_snag
-  command_line  /usr/local/bin/check_snag $HOSTNAME$ /usr/bin/ssh snag@$HOSTADDRESS$
+  command_line  MY_PLUGINS_DIR/check_snag $HOSTNAME$ /usr/bin/ssh snag@$HOSTADDRESS$
   }
+
+(In the above, the plugins and bin directories are as appropriate to
+your own system.)
 
 in services.cfg
 +++++++++++++++
