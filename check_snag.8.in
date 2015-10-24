@@ -36,13 +36,13 @@ Suggested usage is as follows:
 .nf
 define command{
   command_name check_self
-  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
-  	/usr/local/bin/snag
+  command_line @pluginsdir@/check_snag $HOSTNAME$ \\
+  	@pluginsdir@/snag
   }
 
 define command{
   command_name check_snag
-  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
+  command_line @pluginsdir@/check_snag $HOSTNAME$ \\
   	/usr/bin/ssh snag@$HOSTADDRESS$
   }
 .fi

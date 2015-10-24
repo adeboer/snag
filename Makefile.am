@@ -20,7 +20,9 @@ AM_LFLAGS = -s
 AM_YFLAGS = -d
 AM_CPPFLAGS = -DSYSCONFDIR='"$(sysconfdir)"'
 
-bin_PROGRAMS = snag check_snag
+plugins_PROGRAMS = check_snag
+
+bin_PROGRAMS = snag
 
 bin_SCRIPTS = snagmsgs
 
@@ -38,3 +40,6 @@ snag.8 : snag.8.in Makefile
 
 snag.conf.5 : snag.conf.5.in Makefile
 	sed -e 's|@sysconfdir[@]|$(sysconfdir)|g' snag.conf.5.in > $@
+
+check_snag.8 : check_snag.8.in Makefile
+	sed -e 's|@sysconfdir[@]|$(sysconfdir)|g' check_snag.8.in > $@

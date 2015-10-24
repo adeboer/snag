@@ -85,7 +85,7 @@ commandline must both be given as quoted strings.
 
 Example:
 
-command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
+command "NTP jitter" "@pluginsdir@/check_ntp ..."
 
 Note that the check should output just one line of Nagios data, and
 certainly should not output more than 512 bytes.  Snag does not read the

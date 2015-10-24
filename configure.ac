@@ -53,7 +53,30 @@ AC_ARG_WITH([cmdpipe],
 [],
 [with_cmdpipe=check])
 
+AC_ARG_WITH([plugins],
+[AS_HELP_STRING([--with-plugins],
+[support read-write pipe @<:@default=check@:>@])],
+[],
+[with_plugins=check])
+
+if test "x$with_plugins" = "xcheck"; then
+	for p in /usr/local/libexec/nagios /usr/lib/nagios/plugins /usr/nagios/libexec; do
+		if test -d $p; then
+			with_plugins=p
+			break
+		fi
+	done
+fi
+
+if test "x$with_plugins" = "xcheck"; then
+	echo Cannot find your monitoring plugins location
+	exit 1
+fi
+
+AC_SUBST([pluginsdir],[$with_plugins])
+
 AC_DEFINE_UNQUOTED([CMDPIPE], ["$with_cmdpipe"], [Named pipe used for external command injection...])
+AC_DEFINE_UNQUOTED([PLUGINS], ["$with_plugins"], [Where monitor plugins (check_*) live...])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

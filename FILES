@@ -2,29 +2,17 @@
 snagmsgs:my $LOG = '/var/nagios/nagios.log';
 snagmsgs:my $CONF = '/etc/nagios/services.cfg';
 
-check_snag.8:  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
-check_snag.8:  	/usr/local/bin/snag
-check_snag.8:  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
-
-snag.conf.5:command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
-
 snagdf.c:	mntf = setmntent("/etc/mtab", "r");
 
 FreeBSD:
  NAGIOSLOG	/var/spool/nagios/nagios.log
  NAGIOSETC	/usr/local/etc/nagios
  NAGIOSCFG	/usr/local/etc/nagios/snagchecks.cfg
- NAGIOSLIB	/usr/local/libexec/nagios/
 
 Gentoo?:
- NAGIOSLIB	/usr/lib/nagios/plugins
  NAGIOSVAR	/var/nagios
  NAGIOSETC	/etc/nagios
-
-OLD:
- NAGIOSLIB	/usr/nagios/libexec
 
 Debian w/Icinga:
  NAGIOSLOG	/var/log/icinga/icinga.log
  NAGIOSETC	/etc/icinga
- NAGIOSLIB	/usr/lib/nagios/plugins/
