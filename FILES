@@ -2,8 +2,6 @@
 snagmsgs:my $LOG = '/var/nagios/nagios.log';
 snagmsgs:my $CONF = '/etc/nagios/services.cfg';
 
-snagdf.c:	mntf = setmntent("/etc/mtab", "r");
-
 FreeBSD:
  NAGIOSLOG	/var/spool/nagios/nagios.log
  NAGIOSETC	/usr/local/etc/nagios
