@@ -1,4 +1,5 @@
 *.o
+*~
 .deps
 Makefile
 Makefile.in
@@ -24,3 +25,5 @@ snag_parse.h
 stamp-h1
 ylwrap
 /attic/
+snag.8
+snag.conf.5

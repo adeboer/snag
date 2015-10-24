@@ -26,7 +26,8 @@
 #include <sys/types.h>
 
 /* config file */
-#define cfile "/etc/snag.conf"
+//#define cfile (SYSCONFDIR "/snag.conf")
+extern const char *cfile;
 
 
 /*

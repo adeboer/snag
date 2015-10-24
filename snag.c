@@ -19,6 +19,8 @@
 
 #include "snag.h"
 
+const char *cfile = SYSCONFDIR "/snag.conf";
+
 int showdefaults;
 
 char *statusword(int sw) {

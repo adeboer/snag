@@ -37,7 +37,7 @@ Protecting the account used would require attention to SSH configuration.
 
 .SH FILES
 
-.I /etc/snag.conf
+.I @sysconfdir@/snag.conf
 
 .SH SEE ALSO
 

@@ -89,7 +89,7 @@ int openconfig() {
 		return 0;
 		}
 	else {
-		perror("snag: cannot open " cfile);
+		perror(cfile);
 		exit(1);
 		}
 	}

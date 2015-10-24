@@ -8,10 +8,6 @@ check_snag.8:  command_line /usr/local/bin/check_snag $HOSTNAME$ \\
 
 snag.conf.5:command "NTP jitter" "/usr/nagios/libexec/check_ntp ..."
 
-snag.8:.I /etc/snag.conf
-snag.conf.5:.I /etc/snag.conf
-snag.h:#define cfile "/etc/snag.conf"
-
 snagdf.c:	mntf = setmntent("/etc/mtab", "r");
 
 FreeBSD:

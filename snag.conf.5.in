@@ -8,7 +8,7 @@ snag.conf - configuration file for
 .SH DESCRIPTION
 
 Directives in
-.I /etc/snag.conf
+.I @sysconfdir@/snag.conf
 (if present) will be used to modify the operation of
 .IR snag (8).
 
@@ -95,7 +95,7 @@ be read.
 
 .SH FILES
 
-.I /etc/snag.conf
+.I @sysconfdir@/snag.conf
 
 .SH SEE ALSO
 
