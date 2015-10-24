@@ -101,7 +101,7 @@ void printdisk(char *mntdir, char *mntdev, char *mnttype, int funny, unsigned lo
 		/* default: check if mntdev is other than /dev/...? */
 		showme = mntdev != NULL && strncmp(mntdev, "/dev/", 5) == 0;
 		/* unless filesystem type is known */
-		for (fst = &fstable; fst->fstname; fst++) {
+		for (fst = fstable; fst->fstname; fst++) {
 			if (strcmp(fst->fstname, mnttype) == 0) {
 				showme = fst->showit;
 				break;
