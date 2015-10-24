@@ -27,9 +27,9 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <fcntl.h>
+#include "config.h"
 
 #define ME "check_snag"
-#define NAGIOSRW "/var/nagios/rw/nagios.cmd"
 
 char inbuf[1025];
 char outbuf[2048];
@@ -179,8 +179,8 @@ int main (int argc, char **argv) {
 		/* Set up pipe to Nagios FIFO.  Open nonblocking, so we get
 		ENXIO if Nagios is dead, then set blocking so we can write to
 		it without being fancy.  */
-		ofd = open(NAGIOSRW, O_WRONLY | O_NONBLOCK, 0);
-		if (ofd == -1) sysdie(NAGIOSRW);
+		ofd = open(CMDPIPE, O_WRONLY | O_NONBLOCK, 0);
+		if (ofd == -1) sysdie(CMDPIPE);
 		flags = fcntl(ofd, F_GETFL, 0);
 		if (flags == -1) sysdie("F_GETFL");
 		flags &= ~O_NONBLOCK;

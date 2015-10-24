@@ -47,5 +47,13 @@ AC_FUNC_GETMNTENT
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([alarm dup2 getmntent gettimeofday hasmntopt select strchr strdup strerror sysinfo getfsstat kvm_open])
 
+AC_ARG_WITH([cmdpipe],
+[AS_HELP_STRING([--with-cmdpipe],
+[support read-write pipe @<:@default=check@:>@])],
+[],
+[with_cmdpipe=check])
+
+AC_DEFINE_UNQUOTED([CMDPIPE], ["$with_cmdpipe"], [Named pipe used for external command injection...])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

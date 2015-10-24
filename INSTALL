@@ -3,13 +3,13 @@ Snag Installation
 
 Things that may need tweaking:
 
-check_snag.c: NAGIOSRW is the Nagios external command pipe.
+check_snag.c: the Nagios external command pipe (cmdpipe below).
 snagmsgs: CONF is the configuration file containing your passive checks,
  and LOG is the Nagios logfile.
 
 After that,
 
-./configure
+./configure --with-cmdpipe=/var/nagios/rw/nagios.cmd
 make
 (as root) make install
 
